@@ -1,4 +1,4 @@
-#include "../include/malloc.h"
+#include "malloc.h"
 
 void				dbg_block(t_block *block)
 {
@@ -93,13 +93,13 @@ void				dbg_count_pages(const t_page_type type)
 	switch (type)
 	{
 	case (E_TINY):
-		printf("TINY pages: %lu\n", i);
+		printf("TINY pages: %llu\n", i);
 		break;
 	case (E_SMALL):
-		printf("SMALL pages: %lu\n", i);
+		printf("SMALL pages: %llu\n", i);
 		break;
 	case (E_LARGE):
-		printf("LARGE pages: %lu\n", i);
+		printf("LARGE pages: %llu\n", i);
 		break;
 	default:
 		;

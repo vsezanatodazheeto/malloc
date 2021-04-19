@@ -1,8 +1,6 @@
 #ifndef MALLOC_H
 # define MALLOC_H
 
-# include "../lib/include/libft.h"
-# include "../lib/include/ft_printf.h"
 # include "malloc_errors.h"
 # include <sys/time.h>
 # include <sys/resource.h>
@@ -10,9 +8,9 @@
 # include <unistd.h>
 
 # include <stdlib.h>
-# include <stdio.h> //printf
 # include <errno.h>
-# include <strings.h> //bzero
+# include <stdio.h> //printf
+# include <string.h>
 
 // # define BIT_W
 # define MAGIC_N					0x5FA
