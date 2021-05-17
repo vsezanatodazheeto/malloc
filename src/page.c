@@ -1,9 +1,8 @@
-#include "../include/malloc.h"
+#include "malloc.h"
 
 /*MAIN_PAGE-------------------------------------------------------------------*/
 
-static void
-main_page_update_extra(t_page **page_curr_old, t_page *page_new)
+static void	main_page_update_extra(t_page **page_curr_old, t_page *page_new)
 {
 	t_page *page_tmp;
 
@@ -12,7 +11,7 @@ main_page_update_extra(t_page **page_curr_old, t_page *page_new)
 	page_new->prev = page_tmp;
 }
 
-static void			main_page_update(t_page *page)
+static void	main_page_update(t_page *page)
 {
 	t_main_page	*main_page;
 
@@ -25,7 +24,12 @@ static void			main_page_update(t_page *page)
 		main_page_update_extra(&main_page->large_curr, page);
 }
 
-t_main_page			*main_page_get(void)
+/*
+** Возвращает адрес статической структуры, которая хранит информацию
+** о страницах разных типов
+*/
+
+t_main_page	*main_page_get(void)
 {
 	static t_main_page	main_page;
 
@@ -43,9 +47,9 @@ static t_page_type	page_ident_type(const size_t area_size)
 	return (E_LARGE);
 }
 
-static void			page_init(t_page *page, const size_t page_size, const size_t area_size)
+static void	page_init(t_page *page, const size_t page_size, const size_t area_size)
 {
-	bzero(page, STRUCT_PAGE_SIZE);
+	memset(page, 0, STRUCT_PAGE_SIZE);
 	page->type = page_ident_type(area_size);
 	page->size = page_size;
 	page->avail_size = page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE;
@@ -72,7 +76,7 @@ static void			page_init(t_page *page, const size_t page_size, const size_t area_
 ** large page	if block size more than 1024, large page == block size
 */
 
-size_t				page_ident_size(const size_t area_size)
+size_t	page_ident_size(const size_t area_size)
 {
 	if (area_size <= BLOCK_TINY_LIMIT)
 		return (PAGE_TINY_SIZE);
@@ -86,21 +90,48 @@ size_t				page_ident_size(const size_t area_size)
 	return (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE);
 }
 
-t_page				*page_create(const size_t area_size)
+/*
+** 1. page_create:
+** определяем тип страницы в зависимости
+** от размера запрашиваемого участка памяти
+**
+** 2. allocate_memory:
+** выделяем область памяти под страницу
+**
+** 3. page_init:
+** инициализируем страницу начальными параметрами
+**
+** 4. main_page_update:
+** обновляем текущий указатель в main_page на нужный тип страницы
+*/
+
+t_page	*page_create(const size_t area_size)
 {
 	t_page	*page;
 	size_t	page_size;
 
-	if (!(page_size = page_ident_size(area_size)))
+	page_size = page_ident_size(area_size);
+	if (!page_size)
 		return (NULL);
-	if (!(page = (t_page *)allocate_memory(page_size)))
+	page = (t_page *)allocate_memory(page_size);
+	if (!page)
 		return (NULL);
 	page_init(page, page_size, area_size);
 	main_page_update(page);
 	return (page);
 }
 
-t_page		*page_get_current_by_type(const size_t block_size)
+/*
+** 1. main_page_get:
+** получаем main_page
+**
+** 2.
+** функция возвращает указатель на тип страницы в зависимости
+** от размера запрашиваемого участка памяти
+** может вернуть NULL, если t_main_page только инициализировалась
+*/
+
+t_page	*page_get_current_by_type(const size_t block_size)
 {
 	t_main_page	*main_page;
 
@@ -112,12 +143,25 @@ t_page		*page_get_current_by_type(const size_t block_size)
 	return (main_page->large_curr);
 }
 
-t_page		*page_get_available(const size_t area_size)
+/*
+** 1. page_get_current_by_type:
+** возвращает текущую страницу в зависимости
+** от размера запрашиваемой памяти (area_size)
+**
+** 2. page_create:
+** если страница не найдена - создаем
+*/
+
+t_page	*page_get_available(const size_t area_size)
 {
 	t_page	*page;
 
-	if (!(page = page_get_current_by_type(area_size)))
-		if (!(page = page_create(area_size)))
+	page = page_get_current_by_type(area_size);
+	if (!page)
+	{
+		page = page_create(area_size);
+		if (!page)
 			return (NULL);
+	}
 	return (page);
 }

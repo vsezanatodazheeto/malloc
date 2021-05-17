@@ -1,7 +1,4 @@
 .PHONY: all clean fclean re
-# COMPILER SETTINGS-------------------------------------------------------------
-CC = clang
-CFLAGS = -Wall -Wextra -Werror -pedantic -g
 
 # DETERMINE THE BIT DEPTH FOR MEMORY ALIGNMENT----------------------------------
 ifeq ($(shell uname -m), x86_64)
@@ -9,60 +6,52 @@ ifeq ($(shell uname -m), x86_64)
 else
 	BITW_RULE="BITW=4"
 endif
+#-------------------------------------------------------------------------------
+NAME = libft_malloc.a
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -pedantic
+#-------------------------------------------------------------------------------
+DH = include/
+H = malloc.h \
+	malloc_errors.h
+H := $(addprefix $(DH), $(H))
+#-------------------------------------------------------------------------------
+DSRC = src/
+SRC = \
+	malloc \
+	page \
+	block \
+	free \
+	debug
+SRC := $(addprefix $(DSRC), $(addsuffix .c, $(SRC)))
+#-------------------------------------------------------------------------------
+DOBJ = obj/
+OBJ = $(patsubst $(DSRC)%, $(DOBJ)%, $(SRC))
+OBJ := $(patsubst %.c, %.o, $(OBJ))
+#-------------------------------------------------------------------------------
+all:
+	@$(MAKE) -s $(NAME)
 
-# COLORS FOR OUTPUT (LINUX)-----------------------------------------------------
-BLUE = "\e[38;5;69m"
-EOC = "\e[0m"
+$(NAME): $(BITW_RULE) $(DOBJ) $(OBJ)
+	gcc main.c $(OBJ) -I$(DH)
+	# @ar -rc $(NAME) $(OBJ)
+	@echo "--------------------------------"
+	@echo "$(NAME) compiled"
+	@echo "--------------------------------"
 
-# LIB (LIBFT, GET_NEXT_LINE, PRINTF)--------------------------------------------
-# ПЕРЕДЕЛАТЬ ПОТОМ
-L_DIR = lib/
-L_NAME = lib.a
-L_RULE = $(addsuffix .lib, $(L_DIR))
+$(DOBJ):
+	@mkdir -p $(DOBJ)
 
-# MALLOC------------------------------------------------------------------------
-
-## program name
-PROG_NAME = a.out
-
-## header dir
-H_DIR = include/
-
-## header name
-H_NAME = malloc
-H_NAME := $(addprefix $(H_DIR), $(addsuffix .h, $(H_NAME)))
-
-## program dir
-PROG_DIR := src/
-
-## program srcs
-PROG_SRC = malloc \
-			free \
-			page \
-			block \
-			debug \
-			extra
-PROG_SRC := $(addsuffix .c, $(PROG_SRC))
-
-## file path to lib, program src/obj files
-PROG_SRC := $(addprefix $(PROG_DIR), $(PROG_SRC))
-L_NAME := $(addprefix $(L_DIR), $(L_NAME))
-
-# RULES / DEPENDENCIES----------------------------------------------------------
-all: $(L_RULE) $(PROG_NAME)
-
-%.lib:
-	@$(MAKE) -sC $(L_DIR)
-
-$(PROG_NAME) : $(PROG_SRC) $(H_NAME) $(L_NAME) Makefile
-	@$(CC) $(CFLAGS) $(PROG_SRC) $(L_NAME) -o $(PROG_NAME) -I $(H_DIR) -D $(BITW_RULE)
-	@echo $(BLUE)"MALLOC COMPILED"$(EOC)
+$(DOBJ)%.o: $(DSRC)%.c $(H) Makefile
+	@echo $<
+	@$(CC) $(CFLAGS) \
+	-D BITW=8 \
+	-I$(DH) -c $< -o $@
 
 clean:
-	@$(MAKE) -sC $(L_DIR) clean
+	@rm -rf $(OBJ)
 
 fclean: clean
-	@$(MAKE) -sC $(L_DIR) fclean
-	@rm -f $(PROG_NAME)
+	@rm -rf $(NAME)
 
 re: fclean all

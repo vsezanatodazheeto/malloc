@@ -1,9 +1,9 @@
-#include "../include/malloc.h"
+#include "malloc.h"
 
 
 extern void *g_e_rewrite;
 
-t_block		*block_add(void *area, const size_t area_size)
+t_block	*block_add(void *area, const size_t area_size)
 {
 	t_block	*block;
 
@@ -12,9 +12,7 @@ t_block		*block_add(void *area, const size_t area_size)
 	return (block);
 }
 
-static void
-block_reserve_possible
-(t_page *page, t_block *block, const size_t area_size, const size_t unused_size)
+static void block_reserve_possible(t_page *page, t_block *block, const size_t area_size, const size_t unused_size)
 {
 	t_block *block_possible;
 
@@ -40,7 +38,7 @@ block_reserve_possible
 ** если за этим блоком конец страницы, то аналогично
 */
 
-void		block_reserve(t_page *page, t_block *block, const size_t area_size)
+void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 {
 	size_t unused_size;
 
@@ -68,7 +66,7 @@ void		block_reserve(t_page *page, t_block *block, const size_t area_size)
 ** который будет хранить информацию об пока неиспользованным пространстве
 */
 
-t_block		*block_get_available(const t_page *page, const size_t area_size)
+t_block	*block_get_available(const t_page *page, const size_t area_size)
 {
 	t_block	*block;
 
