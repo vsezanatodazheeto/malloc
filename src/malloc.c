@@ -49,10 +49,14 @@ void	*m_malloc(size_t area_size)
 	t_page	*page;
 	t_block	*block;
 
+	// делаем выравнивание
 	area_size = area_size_align(area_size);
 	if (!area_size)
 		return (NULL);
+
+	// получаем страничку памяти для блоков типа t_page
 	page = page_get_available(area_size);
+
 	block = block_get_available(page, area_size);
 	if (!block)
 	{

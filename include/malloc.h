@@ -13,15 +13,18 @@
 # include <string.h>
 
 // # define BIT_W
-# define MAGIC_N					0x5FA
+// 1432005180
+// 0101 0101 0101 1010 1010 1010 0011 1100
+// 0x555AAA3C
+#define MAGIC_N						0x555AAA3C
 # define PAGE_TINY_SIZE				(2 * getpagesize())
 # define BLOCK_TINY_LIMIT			128
 # define PAGE_SMALL_SIZE			(16 * getpagesize())
 # define BLOCK_SMALL_LIMIT			1024
 
-# define STRUCT_MAIN_PAGE_SIZE		(long)(sizeof(t_main_page))
-# define STRUCT_PAGE_SIZE			(long)(sizeof(t_page))
-# define STRUCT_BLOCK_SIZE			(long)(sizeof(t_block))
+# define STRUCT_MAIN_PAGE_SIZE		(size_t)(sizeof(t_main_page))
+# define STRUCT_PAGE_SIZE			(size_t)(sizeof(t_page))
+# define STRUCT_BLOCK_SIZE			(size_t)(sizeof(t_block))
 
 typedef void	*t_v;
 typedef char	*t_ch;
@@ -52,11 +55,12 @@ typedef struct				s_main_page
 	struct s_page			*large_curr;
 }							t_main_page;
 
+// новый лист добавляется в начало и становится head-листом
 typedef struct				s_page
 {
 	size_t					size;
 	size_t					avail_size;				//удалить потом
-	struct s_page			*prev;
+	struct s_page			*next;
 	struct s_block			*block_head;
 	t_page_type				type;
 	int						allocated_blocks;
@@ -64,7 +68,7 @@ typedef struct				s_page
 
 typedef struct				s_block
 {
-	int						magic_num; //0x5FA
+	unsigned int			magic_num; //0x5FA
 	size_t					size;
 	struct s_block			*prev;
 	struct s_block			*next;

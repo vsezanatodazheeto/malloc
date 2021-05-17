@@ -1,6 +1,5 @@
 #include "malloc.h"
 
-
 extern void *g_e_rewrite;
 
 t_block	*block_add(void *area, const size_t area_size)
@@ -73,7 +72,7 @@ t_block	*block_get_available(const t_page *page, const size_t area_size)
 	block = NULL;
 	printf("--------------------------------\n");
 	printf("in: %s\n", __func__);
-	for (; page; page = page->prev)
+	for (; page; page = page->next)
 	{
 		for (block = page->block_head; block; block = block->next)
 		{

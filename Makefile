@@ -1,5 +1,3 @@
-.PHONY: all clean fclean re
-
 # DETERMINE THE BIT DEPTH FOR MEMORY ALIGNMENT----------------------------------
 ifeq ($(shell uname -m), x86_64)
 	BITW_RULE="BITW=8"
@@ -55,3 +53,5 @@ fclean: clean
 	@rm -rf $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re

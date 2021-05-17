@@ -33,7 +33,7 @@ void				dbg_gfinfo(const t_page_type type)
 	printf("------------------%s--------------------\n", (type == E_TINY? "TINY PAGE" : type == E_SMALL? "SMALL PAGE" : "LARGE PAGE"));
 	printf("t_page size: %lu\n", STRUCT_PAGE_SIZE);
 	printf("t_block size: %lu\n", STRUCT_BLOCK_SIZE);
-	for (int i = 1; page; ++i, page = page->prev)
+	for (int i = 1; page; ++i, page = page->next)
 	{
 		printf("P [%d] ", i);
 		if (page->type == E_LARGE)
@@ -87,7 +87,7 @@ void				dbg_count_pages(const t_page_type type)
 		return ;
 	while (page)
 	{
-		page = page->prev;
+		page = page->next;
 		i++;
 	}
 	switch (type)

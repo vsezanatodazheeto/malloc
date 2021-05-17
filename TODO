@@ -9,3 +9,7 @@ calloc:
 	просто сделать
 garbage collector:
 	просто сделать
+
+пройтись по функциям и заменить сигнатуры в хедере
+
+https://nouveau.freedesktop.org/Valgrind-mmt.html -- проверка на утечки
