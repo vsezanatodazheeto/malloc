@@ -17,11 +17,11 @@ static void	main_page_update(t_page *page)
 
 	main_page = main_page_get();
 	if (page->type == E_TINY)
-		main_page_update_extra(&main_page->tiny_curr, page);
+		main_page_update_extra(&main_page->tiny_head, page);
 	else if (page->type == E_SMALL)
-		main_page_update_extra(&main_page->small_curr, page);
+		main_page_update_extra(&main_page->small_head, page);
 	else
-		main_page_update_extra(&main_page->large_curr, page);
+		main_page_update_extra(&main_page->large_head, page);
 }
 
 /*
@@ -140,10 +140,10 @@ t_page	*page_get_current_by_type(const size_t block_size)
 
 	main_page = main_page_get();
 	if (block_size <= BLOCK_TINY_LIMIT)
-		return (main_page->tiny_curr);
+		return (main_page->tiny_head);
 	else if (block_size <= BLOCK_SMALL_LIMIT)
-		return (main_page->small_curr);
-	return (main_page->large_curr);
+		return (main_page->small_head);
+	return (main_page->large_head);
 }
 
 /*

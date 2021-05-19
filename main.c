@@ -15,6 +15,7 @@ int			main()
 	if (!(p1 = m_malloc(7)))
 		;
 		// exit(1);
+	m_free(p1);
 	// dbg_gfinfo(E_TINY);
 	// dbg_gfinfo(E_SMALL);
 	// dbg_gfinfo(E_LARGE);

@@ -28,12 +28,44 @@ static void			free_defragmentation(t_block *block)
 	printf("free count blocks %d\n", count);
 }
 
+static t_page		*free_page_find(t_page *page, void *ptr)
+{
+	for (; page; page = page->next)
+	{
+		if (ptr > (t_v)page && ptr < (t_v)PAGE_LAST_ADDR(page))
+			break ;
+	}
+	return (page);
+}
+
 static t_block		*free_block_validation(void *ptr)
 {
+	t_main_page	*main_page;
+	t_page	*page;
+
+	main_page = main_page_get();
+	if (!(page = free_page_find(main_page->tiny_head, ptr)))
+	{
+		if (!(page = free_page_find(main_page->small_head, ptr)))
+		{
+			if (!(page = free_page_find(main_page->small_head, ptr)))
+			{
+				dprintf(2, "Error: invalid free pointer!\n");
+				return (NULL);
+			}
+		}
+	}
+	if (page)
+		dbg_page(page);
+
 	t_block		*block;
 
-	if (!ptr)
-		return (NULL);
+	// if (!ptr)
+	// 	return (NULL);
+
+	// for ()
+
+
 	block = BLOCK_FIRST_ADDR(ptr);
 	if (block->magic_num != MAGIC_N)
 	{
@@ -47,6 +79,29 @@ static t_block		*free_block_validation(void *ptr)
 	}
 	return (block);
 }
+
+void			m_free(void *ptr)
+{
+	t_page		*page;
+	t_block		*block;
+	static int i = 0;
+
+	if (!(block = free_block_validation(ptr)))
+		return ;
+
+	// зануление
+	block->is_avail = AVAILABLE;
+	block->magic_num = 0;
+
+	page = block->page;
+	page->avail_size = page->avail_size + block->size;
+	page->allocated_blocks--;
+	// if (page->allocated_blocks < 1)
+		// deallocate_memory(page);
+	free_defragmentation(block);
+	i++;
+}
+
 
 // static void		main_page_remove_page(t_page *page_head, t_page *page_target)
 // {
@@ -73,21 +128,3 @@ static t_block		*free_block_validation(void *ptr)
 // 		main_page_remove_page(main_page->large_curr, page);
 // 	munmap((t_v)((t_ch)page - STRUCT_PAGE_SIZE), page->size);
 // }
-
-void			m_free(void *ptr)
-{
-	t_page		*page;
-	t_block		*block;
-	static int i = 0;
-
-	if (!(block = free_block_validation(ptr)))
-		return ;
-	block->is_avail = AVAILABLE;
-	page = block->page;
-	page->avail_size = page->avail_size + block->size;
-	page->allocated_blocks--;
-	// if (page->allocated_blocks < 1)
-		// deallocate_memory(page);
-	free_defragmentation(block);
-	i++;
-}

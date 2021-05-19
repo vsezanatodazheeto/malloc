@@ -7,7 +7,7 @@ endif
 #-------------------------------------------------------------------------------
 NAME = libft_malloc.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic
+# CFLAGS = -Wall -Wextra -Werror -pedantic
 #-------------------------------------------------------------------------------
 DH = include/
 H = malloc.h \
@@ -30,7 +30,7 @@ OBJ := $(patsubst %.c, %.o, $(OBJ))
 all:
 	@$(MAKE) -s $(NAME)
 
-$(NAME): $(BITW_RULE) $(DOBJ) $(OBJ)
+$(NAME): $(DOBJ) $(OBJ)
 	gcc main.c $(OBJ) -I$(DH)
 	# @ar -rc $(NAME) $(OBJ)
 	@echo "--------------------------------"

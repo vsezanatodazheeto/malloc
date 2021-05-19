@@ -1,5 +1,16 @@
 #include "malloc.h"
 
+void	dbg_page(t_page *page)
+{
+	printf("-------------------------------------------\n");
+	printf("page addr: [%p]\n", (t_v)page);
+	printf("page->allocated_blocks: [%d]\n", page->allocated_blocks);
+	printf("page->avail_size: [%zu]\n", page->avail_size);
+	printf("page->size: [%zu]\n", page->size);
+	printf("page->type: [%s]\n", page->type == 0 ? "TINY" : page->type == 1 ? "SMALL" : "LARGE");
+	printf("-------------------------------------------\n");
+}
+
 void				dbg_block(t_block *block)
 {
 	printf("---------------debug block-----------------\n");

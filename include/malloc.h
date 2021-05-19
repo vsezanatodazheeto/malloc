@@ -9,14 +9,12 @@
 
 # include <stdlib.h>
 # include <errno.h>
-# include <stdio.h> //printf
+# include <stdio.h>
 # include <string.h>
 
-// # define BIT_W
 // 1432005180
 // 0101 0101 0101 1010 1010 1010 0011 1100
-// 0x555AAA3C
-#define MAGIC_N						0x555AAA3C
+# define MAGIC_N					0x555AAA3C
 # define PAGE_TINY_SIZE				(2 * getpagesize())
 # define BLOCK_TINY_LIMIT			128
 # define PAGE_SMALL_SIZE			(16 * getpagesize())
@@ -50,9 +48,9 @@ typedef enum				e_page_type
 
 typedef struct				s_main_page
 {
-	struct s_page			*tiny_curr;
-	struct s_page			*small_curr;
-	struct s_page			*large_curr;
+	struct s_page			*tiny_head;
+	struct s_page			*small_head;
+	struct s_page			*large_head;
 }							t_main_page;
 
 // новый лист добавляется в начало и становится head-листом
@@ -93,6 +91,7 @@ t_block				*block_add(void *page, const size_t area_size);
 
 /* DEBUG----------------------------------------------------------------------*/
 void				dbg_block(t_block *block);
+void				dbg_page(t_page *page);
 void				dbg_count_blocks_in_page(const t_page *page);
 void				dbg_count_pages(const t_page_type type);
 void				dbg_gfinfo(const t_page_type type);
