@@ -44,6 +44,27 @@ size_t	area_size_align(size_t area_size)
 ** с/без блоками/блоков для размешения нового блока
 */
 
+// void	*m_realloc(void *ptr, size_t size);
+
+void	*m_calloc(size_t nmemb, size_t memb_size)
+{
+	void	*area;
+	size_t	size;
+
+	if (!nmemb || !memb_size)
+		return (NULL);
+	size = nmemb * memb_size;
+	if (nmemb != size / memb_size)
+	{
+		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
+		return (NULL);
+	}
+	if (!(area = malloc(size)))
+		return (NULL);
+	memset(area, 0, size);
+	return (area);
+}
+
 void	*m_malloc(size_t area_size)
 {
 	t_page	*page;
