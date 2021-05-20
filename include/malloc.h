@@ -61,6 +61,7 @@ typedef struct				s_page
 	size_t					size;
 	size_t					avail_size;				//удалить потом
 	size_t					allocated_blocks;
+	struct s_page			*prev;
 	struct s_page			*next;
 	struct s_block			*block_head;
 	t_page_type				type;
@@ -72,7 +73,7 @@ typedef struct				s_block
 	size_t					size;
 	struct s_block			*prev;
 	struct s_block			*next;
-	struct s_page			*page;
+	struct s_page			*page_head;
 	int						is_avail;
 }							t_block;
 

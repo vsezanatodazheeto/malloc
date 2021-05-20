@@ -54,7 +54,7 @@ static void	page_init(t_page *page, const size_t page_size, const size_t block_s
 	page->size = page_size;
 	page->avail_size = page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE;
 	page->block_head = block_add(PAGE_UNUSED_ADDR(page), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
-	page->block_head->page = page;
+	page->block_head->page_head = page;
 	printf("--------------------------------\n");
 	printf("in: %s\n", __func__);
 	printf("created new page, type:   %s\n", page->type == E_LARGE? "LARGE" : page->type == E_SMALL? "SMALL" : "TINY");

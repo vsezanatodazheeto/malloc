@@ -8,16 +8,25 @@ int			main()
 {
 	void *p1 = NULL;
 	void *p2 = NULL;
+	void *p3 = NULL;
 
-	// if (!(p1 = m_malloc(-1)))
-		// ;
-		// exit(1);
-	if (!(p1 = m_malloc(7)))
+	if (!(p1 = m_malloc(-1)))
 		;
 		// exit(1);
-	free(NULL);
-	m_free((void*)123);
+	if (!(p1 = m_malloc(7000)))
+		;
+	if (!(p2 = m_malloc(7000)))
+		;
+	if (!(p3 = m_malloc(7000)))
+		;
+		// exit(1);
+	// m_free((void*)123);
 	m_free((void*)p1);
+	dbg_count_pages(E_LARGE);
+	m_free((void*)p2);
+	dbg_count_pages(E_LARGE);
+	m_free((void*)p3);
+	dbg_count_pages(E_LARGE);
 
 	// dbg_gfinfo(E_TINY);
 	// dbg_gfinfo(E_SMALL);
@@ -25,29 +34,13 @@ int			main()
 	return (0);
 }
 
+// int main()
+// {
+// 	int i = 4;
 
-// #include <iostream>
-// #include <cmath>
-// using namespace std;
-// bool isMulOverflow(long long A, long long B) {
-//    if (A == 0 || B == 0)
-//       return false;
-//    long long result = A * B;
-//    if (A == result / B)
-//       return false;
-//    else
-//       return true;
+// 	if (--i < 4)
+// 		printf("ono\n");
+// 	else
+// 		printf("ne ono\n");
+// 	return (0);
 // }
-// int main() {
-// //    long long a = 10000000000 , b = -10000000000;
-//    long long a = 10000000000 , b = 10;
-//    if(isMulOverflow(a, b)){
-//       cout <<"It will overflow";
-//    }
-//    else{
-//       cout <<"It will not overflow";
-//    }
-// }
-
-
-// В противном случае, если произведение двух, разделенного на одно, равно другому, то оно не будет превышать 
