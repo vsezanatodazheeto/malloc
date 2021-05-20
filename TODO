@@ -10,6 +10,7 @@ calloc:
 garbage collector:
 	просто сделать
 
-пройтись по функциям и заменить сигнатуры в хедере
+ПРОЙТИСЬ ПО ФУНКЦИЯМ И ЗАМЕНИТЬ СИГНАТУРЫ В ХЕДЕРЕ
+ПРОЙТИСЬ ПО ВСЕМ ПОДКЛЮЧАЕМЫМ .H ФАЙЛАМ
 
-https://nouveau.freedesktop.org/Valgrind-mmt.html -- проверка на утечки
+Https://nouveau.freedesktop.org/Valgrind-mmt.html -- проверка на утечки

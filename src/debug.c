@@ -1,10 +1,10 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 void	dbg_page(t_page *page)
 {
 	printf("-------------------------------------------\n");
 	printf("page addr: [%p]\n", (t_v)page);
-	printf("page->allocated_blocks: [%d]\n", page->allocated_blocks);
+	printf("page->allocated_blocks: [%ld]\n", page->allocated_blocks);
 	printf("page->avail_size: [%zu]\n", page->avail_size);
 	printf("page->size: [%zu]\n", page->size);
 	printf("page->type: [%s]\n", page->type == 0 ? "TINY" : page->type == 1 ? "SMALL" : "LARGE");
@@ -53,7 +53,7 @@ void				dbg_gfinfo(const t_page_type type)
 			printf("[%lu]-[page size] = [%lu] b", page->size, page->size - STRUCT_PAGE_SIZE);
 		printf("[%p]:\n", (void *)page);
 		printf("\tavail size: %lu\n", page->avail_size);
-		printf("\tallocated_blocks_count: [%d]\n", page->allocated_blocks);
+		printf("\tallocated_blocks_count: [%ld]\n", page->allocated_blocks);
 		// printf("%lu\n", STRUCT_BLOCK_SIZE);
 		// printf("%lu\n", STRUCT_PAGE_SIZE);
 		dbg_count_blocks_in_page(page);
@@ -104,13 +104,13 @@ void				dbg_count_pages(const t_page_type type)
 	switch (type)
 	{
 	case (E_TINY):
-		printf("TINY pages: %llu\n", i);
+		printf("TINY pages: %lu\n", i);
 		break;
 	case (E_SMALL):
-		printf("SMALL pages: %llu\n", i);
+		printf("SMALL pages: %lu\n", i);
 		break;
 	case (E_LARGE):
-		printf("LARGE pages: %llu\n", i);
+		printf("LARGE pages: %lu\n", i);
 		break;
 	default:
 		;

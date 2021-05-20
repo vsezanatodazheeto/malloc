@@ -5,6 +5,8 @@
 # include <sys/time.h>
 # include <sys/resource.h>
 # include <sys/mman.h>
+// # include <limits.h>
+# include <stdint.h>
 # include <unistd.h>
 
 # include <stdlib.h>
@@ -58,10 +60,10 @@ typedef struct				s_page
 {
 	size_t					size;
 	size_t					avail_size;				//удалить потом
+	size_t					allocated_blocks;
 	struct s_page			*next;
 	struct s_block			*block_head;
 	t_page_type				type;
-	int						allocated_blocks;
 }							t_page;
 
 typedef struct				s_block

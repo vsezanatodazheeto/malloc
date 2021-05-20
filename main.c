@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "include/malloc.h"
 #include <stdint.h>
 
 // 8192
@@ -15,7 +15,10 @@ int			main()
 	if (!(p1 = m_malloc(7)))
 		;
 		// exit(1);
-	m_free(p1);
+	free(NULL);
+	// m_free((void*)123);
+	// m_free((void*)123);
+
 	// dbg_gfinfo(E_TINY);
 	// dbg_gfinfo(E_SMALL);
 	// dbg_gfinfo(E_LARGE);
