@@ -59,7 +59,7 @@ void	*m_calloc(size_t nmemb, size_t memb_size)
 		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
 		return (NULL);
 	}
-	area = malloc(size);
+	area = m_malloc(size);
 	if (!area)
 		return (NULL);
 	memset(area, 0, size);

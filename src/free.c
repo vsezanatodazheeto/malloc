@@ -102,10 +102,14 @@ void	m_free(void *ptr)
 
 	if (!ptr)
 		return ;
-	if (!(page = free_page_validation(ptr)))
+	page = free_page_validation(ptr);
+	if (!page)
 		return ;
-	if (!(block = free_block_validation(page, ptr)))
+	block = free_block_validation(page, ptr);
+	if (!block)
 		return ;
+	else
+		printf("BLOCK FOUNED!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 
 	// зануление
 	block->is_avail = AVAILABLE;

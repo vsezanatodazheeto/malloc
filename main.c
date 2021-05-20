@@ -16,8 +16,8 @@ int			main()
 		;
 		// exit(1);
 	free(NULL);
-	// m_free((void*)123);
-	// m_free((void*)123);
+	m_free((void*)123);
+	m_free((void*)p1);
 
 	// dbg_gfinfo(E_TINY);
 	// dbg_gfinfo(E_SMALL);
