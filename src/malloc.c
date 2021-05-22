@@ -35,14 +35,6 @@ size_t	area_size_align(size_t area_size)
 	return ((((area_size - 1) / BITW) * BITW) + BITW);
 }
 
-/*
-** 1. area_size_align:
-** выравнивание будущей области памяти (area_size)
-**
-** 2. page_get_available:
-** получаем текущую страницу нужного типа
-** с/без блоками/блоков для размешения нового блока
-*/
 
 // void	*m_realloc(void *ptr, size_t size);
 
@@ -65,6 +57,15 @@ void	*m_calloc(size_t nmemb, size_t memb_size)
 	memset(area, 0, size);
 	return (area);
 }
+
+/*
+** 1. area_size_align:
+** выравнивание будущей области памяти (area_size)
+**
+** 2. page_get_available:
+** получаем текущую страницу нужного типа
+** с/без блоками/блоков для размешения нового блока
+*/
 
 void	*m_malloc(size_t area_size)
 {

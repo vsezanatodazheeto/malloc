@@ -10,7 +10,7 @@ int			main()
 	void *p2 = NULL;
 	void *p3 = NULL;
 
-	if (!(p1 = m_malloc(-1)))
+	if (!(p1 = m_malloc(0)))
 		;
 		// exit(1);
 	if (!(p1 = m_malloc(7000)))

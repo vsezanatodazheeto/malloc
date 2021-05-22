@@ -47,35 +47,17 @@ static t_page_type	page_ident_type(const size_t area_size)
 	return (E_LARGE);
 }
 
-static void	page_init(t_page *page, const size_t page_size, const size_t block_size)
-{
-	memset(page, 0, STRUCT_PAGE_SIZE);
-	page->type = page_ident_type(block_size);
-	page->size = page_size;
-	page->avail_size = page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE;
-	page->block_head = block_add(PAGE_UNUSED_ADDR(page), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
-	page->block_head->page_head = page;
-	printf("--------------------------------\n");
-	printf("in: %s\n", __func__);
-	printf("created new page, type:   %s\n", page->type == E_LARGE? "LARGE" : page->type == E_SMALL? "SMALL" : "TINY");
-	printf("page size:                %lu\n", page->size);
-	printf("page struct size:         %lu\n", STRUCT_PAGE_SIZE);
-	printf("first block struct size:  %lu\n", STRUCT_BLOCK_SIZE);
-	printf("first block size:         %lu\n", page->block_head->size);
-	printf("page avail size:          %lu\n", page->avail_size);
-	printf("--------------------------------\n");
-}
-
 /*
-** tiny block	<=128
-** small block	<=1024
-** large block	>1024
-** tiny page	2 * 4096
-** small page	16 * 4096
-** large page	if block_size more than 1024, large page == block_size
+** page_ident_size():
+**
+** возвращает размер страницы в зависимости от количества запрашиваемой памяти
+** если это не TINY и не SMALL, то проверяем на переполнение
+** tiny block	<= 128 		|		tiny page == 2 * getpagesize() (2 * 4096)
+** small block	<= 1024		|		small page == 16 * getpagesize() (16 * 4096)
+** large block	> 1024		|		large page == area_size + malloc meta data
 */
 
-size_t	page_ident_size(const size_t area_size)
+static size_t	page_ident_size(const size_t area_size)
 {
 	if (area_size <= BLOCK_TINY_LIMIT)
 		return (PAGE_TINY_SIZE);
@@ -83,15 +65,27 @@ size_t	page_ident_size(const size_t area_size)
 		return (PAGE_SMALL_SIZE);
 	else if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
 	{
-		// тут можно улучшить, если не влазит, отдаем просто area_size
 		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
 		return (0);
 	}
 	return (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE);
 }
 
+static void	page_init(t_page *page, const size_t page_size, const size_t block_size)
+{
+	memset(page, 0, STRUCT_PAGE_SIZE);
+	page->type = page_ident_type(block_size);
+	page->size = page_size;
+	page->avail_size = page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE; // удалить потом
+	page->block_head = block_add(PAGE_UNUSED_ADDR(page), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
+	page->block_head->page_head = page;
+	dbg_block(page->block_head);
+}
+
 /*
-** 1. page_create:
+** page_create():
+**
+** 1. page_indent_size:
 ** определяем тип страницы в зависимости
 ** от размера запрашиваемого участка памяти
 **
@@ -102,7 +96,7 @@ size_t	page_ident_size(const size_t area_size)
 ** инициализируем страницу начальными параметрами
 **
 ** 4. main_page_update:
-** обновляем текущий указатель в main_page на нужный тип страницы
+** обновляем указатель в main_page на 'свежий' указатель
 */
 
 t_page	*page_create(const size_t block_size)
@@ -122,8 +116,10 @@ t_page	*page_create(const size_t block_size)
 }
 
 /*
+** page_get_current_by_type():
+**
 ** 1. main_page_get:
-** получаем main_page
+** получаем main_page (static)
 **
 ** 2.
 ** функция возвращает указатель на тип страницы в зависимости
@@ -131,7 +127,8 @@ t_page	*page_create(const size_t block_size)
 ** BLOCK_TINY_LIMIT <= 128
 ** BLOCK_SMALL_LIMIT <= 1024
 ** BLOCK_LARGE_LIMIT > 1024
-** может вернуть NULL, если t_main_page только инициализировалась, и до этого не было вызовов page_get_available
+** может вернуть NULL, если t_main_page только инициализировалась
+** и до этого не было вызовов page_get_available
 */
 
 t_page	*page_get_current_by_type(const size_t block_size)
@@ -147,6 +144,8 @@ t_page	*page_get_current_by_type(const size_t block_size)
 }
 
 /*
+** page_get_available():
+**
 ** 1. page_get_current_by_type:
 ** возвращает текущую страницу в зависимости
 ** от размера запрашиваемой памяти (area_size)
@@ -168,3 +167,14 @@ t_page	*page_get_available(const size_t block_size)
 	}
 	return (page);
 }
+
+// page_init
+// printf("--------------------------------\n");
+// printf("in: %s\n", __func__);
+// printf("created new page, type:   %s\n", page->type == E_LARGE? "LARGE" : page->type == E_SMALL? "SMALL" : "TINY");
+// printf("page size:                %lu\n", page->size);
+// printf("page struct size:         %lu\n", STRUCT_PAGE_SIZE);
+// printf("first block struct size:  %lu\n", STRUCT_BLOCK_SIZE);
+// printf("first block size:         %lu\n", page->block_head->size);
+// printf("page avail size:          %lu\n", page->avail_size);
+// printf("--------------------------------\n");
