@@ -36,7 +36,20 @@ size_t	area_size_align(size_t area_size)
 }
 
 
-// void	*m_realloc(void *ptr, size_t size);
+void	*m_realloc(void *ptr, size_t size)
+{
+	t_page	*page;
+	t_block	*block;
+
+	if (!ptr)
+		return (NULL); //остановились тут
+	page = free_page_validation(ptr);
+	if (!page)
+		return ;
+	block = free_block_validation(page, ptr);
+	if (!block)
+		return ;
+}
 
 void	*m_calloc(size_t nmemb, size_t memb_size)
 {
