@@ -1,5 +1,45 @@
 #include "../include/malloc.h"
 
+/*MAIN_PAGE-------------------------------------------------------------------*/
+
+
+// ОСТАНОВИЛИСЬ ЗДЕСЬ
+static void	main_page_deallocate_memory_extra(t_page **head, t_page *page)
+{
+	t_page	*tmp;
+
+	if (*head == page)
+	{
+		*head = page->next;
+		munmap((t_v)page, page->size);
+		return ;
+	}
+	for (tmp = *head; tmp->next; tmp = tmp->next)
+	{
+		if (tmp->next == page)
+		{
+			tmp->next = page->next;
+			munmap((t_v)page, page->size);
+			return ;
+		}
+	}
+}
+
+static void	main_page_deallocate_memory(t_page *page)
+{
+	t_main_page	*main_page;
+
+	main_page = main_page_get();
+	if (page->type == E_TINY)
+		main_page_deallocate_memory_extra(&main_page->tiny_head, page);
+	else if (page->type == E_SMALL)
+		main_page_deallocate_memory_extra(&main_page->small_head, page);
+	else
+		main_page_deallocate_memory_extra(&main_page->large_head, page);
+}
+
+/*PAGE------------------------------------------------------------------------*/
+
 // разобрать эту функцию
 static void	free_defragmentation(t_block *block)
 {
@@ -30,40 +70,6 @@ static void	free_defragmentation(t_block *block)
 		head_block->page_head->avail_size += count * STRUCT_BLOCK_SIZE;
 	}
 	printf("free count blocks %d\n", count);
-}
-
-static void	deallocate_memory_extra(t_page **head, t_page *page)
-{
-	t_page	*tmp;
-
-	if (*head == page)
-	{
-		*head = page->next;
-		munmap((t_v)page, page->size);
-		return ;
-	}
-	for (tmp = *head; tmp->next; tmp = tmp->next)
-	{
-		if (tmp->next == page)
-		{
-			tmp->next = page->next;
-			munmap((t_v)page, page->size);
-			return ;
-		}
-	}
-}
-
-static void	deallocate_memory(t_page *page)
-{
-	t_main_page	*main_page;
-
-	main_page = main_page_get();
-	if (page->type == E_TINY)
-		deallocate_memory_extra(&main_page->tiny_head, page);
-	else if (page->type == E_SMALL)
-		deallocate_memory_extra(&main_page->small_head, page);
-	else
-		deallocate_memory_extra(&main_page->large_head, page);
 }
 
 static t_block	*free_block_find(t_page *page, void *ptr)
@@ -150,7 +156,7 @@ void	m_free(void *ptr)
 	block->magic_num = 0;
 	page->avail_size = page->avail_size + block->size; //удалить потом
 	if (--page->allocated_blocks < 1)
-		deallocate_memory(page);
+		main_page_deallocate_memory(page);
 	else
 		free_defragmentation(block);
 }

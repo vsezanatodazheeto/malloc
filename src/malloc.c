@@ -67,12 +67,13 @@ void	*m_realloc(void *ptr, size_t size)
 		return (m_malloc(size));
 		// тут почитать man, по-моему просто нужно вызвать malloc
 	}
-	page = free_page_validation(ptr);
-	if (!page)
-		return ;
-	block = free_block_validation(page, ptr);
-	if (!block)
-		return ;
+	// page = free_page_validation(ptr);
+	// if (!page)
+	// 	return ;
+	// block = free_block_validation(page, ptr);
+	// if (!block)
+	// 	return ;
+	return (NULL);
 }
 
 void	*m_calloc(size_t nmemb, size_t memb_size)
@@ -110,15 +111,11 @@ void	*m_malloc(size_t area_size)
 	t_block	*block;
 
 	// делаем выравнивание
-	area_size = area_size_align(area_size);
-	if (!area_size)
+	if (!(area_size = area_size_align(area_size)))
 		return (NULL);
-
 	// получаем страничку памяти для блоков типа t_page
 	page = page_get_available(area_size);
-
-	block = block_get_available(page, area_size);
-	if (!block)
+	if (!(block = block_get_available(page, area_size)))
 	{
 		if (g_e_rewrite)
 		{
@@ -127,8 +124,7 @@ void	*m_malloc(size_t area_size)
 			return (NULL);
 		}
 		page = page_create(area_size);
-		block = block_get_available(page, area_size);
-		if (!block)
+		if (!(block = block_get_available(page, area_size)))
 			return (NULL);
 		// printf("СТРАНИЧКА ЗАКОНЧИЛАСЬ !!!!!!!\n");
 	}

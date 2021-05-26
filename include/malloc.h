@@ -51,8 +51,11 @@ typedef enum				e_page_type
 typedef struct				s_main_page
 {
 	struct s_page			*tiny_head;
+	struct s_page			*tiny_last;
 	struct s_page			*small_head;
+	struct s_page			*small_last;
 	struct s_page			*large_head;
+	struct s_page			*large_last;
 }							t_main_page;
 
 // новый лист добавляется в начало и становится head-листом
@@ -69,7 +72,7 @@ typedef struct				s_page
 
 typedef struct				s_block
 {
-	unsigned int			magic_num; //0x5FA
+	size_t					magic_num; //0x5FA
 	size_t					size;
 	struct s_block			*prev;
 	struct s_block			*next;

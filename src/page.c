@@ -2,13 +2,14 @@
 
 /*MAIN_PAGE-------------------------------------------------------------------*/
 
-static void	main_page_update_extra(t_page **page_curr_old, t_page *page_new)
+static void	main_page_update_extra(t_page **page_last, t_page *page_new)
 {
-	t_page *page_tmp;
-
-	page_tmp = *page_curr_old;
-	*page_curr_old = page_new;
-	page_new->next = page_tmp;
+	if (*page_last)
+	{
+		(*page_last)->next = page_new;
+		page_new->prev = *page_last;
+	}
+	*page_last = page_new;
 }
 
 static void	main_page_update(t_page *page)
@@ -17,11 +18,23 @@ static void	main_page_update(t_page *page)
 
 	main_page = main_page_get();
 	if (page->type == E_TINY)
-		main_page_update_extra(&main_page->tiny_head, page);
+	{
+		if (!main_page->tiny_head)
+			main_page->tiny_head = page;
+		main_page_update_extra(&main_page->tiny_last, page);
+	}
 	else if (page->type == E_SMALL)
-		main_page_update_extra(&main_page->small_head, page);
+	{
+		if (!main_page->small_head)
+			main_page->small_head = page;
+		main_page_update_extra(&main_page->small_last, page);
+	}
 	else
-		main_page_update_extra(&main_page->large_head, page);
+	{
+		if (!main_page->large_head)
+			main_page->large_head = page;
+		main_page_update_extra(&main_page->large_last, page);
+	}
 }
 
 /*

@@ -65,7 +65,7 @@ void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 ** ищем свободный блок на страницах
 ** если находим, то возвращаем
 ** но перед тем как вернуть, нужно создать следующий,
-** который будет хранить информацию об пока неиспользованным пространстве
+** который будет хранить информацию об пока неиспользованном пространстве
 */
 
 // разобрать эту функцию
@@ -83,9 +83,10 @@ t_block	*block_get_available(const t_page *page, const size_t area_size)
 			if (block->magic_num != MAGIC_N)
 			{
 				g_e_rewrite = block;
+				printf("СУКА ГОВНО\n");
 				return (NULL);
 			}
-			if (block->is_avail == 1 && block->size >= area_size)
+			else if (block->is_avail == 1 && block->size >= area_size)
 				break ;
 		}
 		if (block)
