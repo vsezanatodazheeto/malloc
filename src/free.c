@@ -4,7 +4,7 @@
 
 
 // ОСТАНОВИЛИСЬ ЗДЕСЬ
-static void	main_page_deallocate_memory_extra(t_page **head, t_page **last, t_page *page)
+static void	dealloc_memory_extra(t_page **head, t_page **last, t_page *page)
 {
 	t_page	*tmp;
 

@@ -4,37 +4,6 @@
 // пока что так
 void	*g_e_rewrite;
 
-void	*allocate_memory(const size_t page_size)
-{
-	void	*data_memory;
-
-	data_memory = mmap(NULL, \
-						page_size, \
-						PROT_READ | PROT_WRITE, \
-						MAP_PRIVATE | MAP_ANON, \
-						-1, \
-						0);
-	if (data_memory == MAP_FAILED)
-		return (NULL);
-	return (data_memory);
-}
-
-/*
-** делаем выравнивание area_size в зависимости от разрядности
-** проверяем на переполнение
-** формула выравнивания честно спизжена из интернетов
-*/
-
-size_t	area_size_align(size_t area_size)
-{
-	if (((((area_size - 1) / BITW) * BITW) + BITW) < area_size)
-	{
-		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
-		return (0);
-	}
-	return ((((area_size - 1) / BITW) * BITW) + BITW);
-}
-
 /*
 ** realloc() меняет размер блока памяти, на который указывает ptr,
 ** на размер, равный size байтов. 
@@ -57,24 +26,24 @@ size_t	area_size_align(size_t area_size)
 ** не "очищается" и не перемещается.
 */
 
-void	*m_realloc(void *ptr, size_t size)
-{
-	t_page	*page;
-	t_block	*block;
+// void	*m_realloc(void *ptr, size_t size)
+// {
+// 	t_page	*page;
+// 	t_block	*block;
 
-	if (!ptr)
-	{
-		return (m_malloc(size));
-		// тут почитать man, по-моему просто нужно вызвать malloc
-	}
-	// page = free_page_validation(ptr);
-	// if (!page)
-	// 	return ;
-	// block = free_block_validation(page, ptr);
-	// if (!block)
-	// 	return ;
-	return (NULL);
-}
+// 	if (!ptr)
+// 	{
+// 		return (m_malloc(size));
+// 		// тут почитать man, по-моему просто нужно вызвать malloc
+// 	}
+// 	// page = free_page_validation(ptr);
+// 	// if (!page)
+// 	// 	return ;
+// 	// block = free_block_validation(page, ptr);
+// 	// if (!block)
+// 	// 	return ;
+// 	return (NULL);
+// }
 
 void	*m_calloc(size_t nmemb, size_t memb_size)
 {
@@ -101,8 +70,10 @@ void	*m_calloc(size_t nmemb, size_t memb_size)
 ** выравнивание будущей области памяти (area_size)
 **
 ** 2. page_get_available:
-** получаем текущую страницу нужного типа
-** с/без блоками/блоков для размешения нового блока
+** получаем текущую или создаем новую (при отсутствии страниц) страницу нужного типа
+**
+** 3. block_get_available
+**
 */
 
 void	*m_malloc(size_t area_size)
@@ -110,17 +81,15 @@ void	*m_malloc(size_t area_size)
 	t_page	*page;
 	t_block	*block;
 
-	// делаем выравнивание
 	if (!(area_size = area_size_align(area_size)))
 		return (NULL);
-	// получаем страничку памяти для блоков типа t_page
-	page = page_get_available(area_size);
+	if (!(page = page_get_available(area_size)))
+		return (NULL);
 	if (!(block = block_get_available(page, area_size)))
 	{
 		if (g_e_rewrite)
 		{
-			dprintf(2, "Error: block rewriting detected");
-			dprintf(2, " at [%p], stop work\n", g_e_rewrite);
+			dprintf(2, "Error: block rewriting detected at [%p], stop work\n", g_e_rewrite);
 			return (NULL);
 		}
 		page = page_create(area_size);

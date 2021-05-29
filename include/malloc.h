@@ -13,6 +13,10 @@
 # include <stdio.h>
 # include <string.h>
 
+// tiny block	<= 128 	|	tiny page == 2 * getpagesize() (2 * 4096)
+// small block	<= 1024	|	small page == 16 * getpagesize() (16 * 4096)
+// large block	> 1024	|	large page == area_size + malloc meta data
+
 // 1432005180
 // 0101 0101 0101 1010 1010 1010 0011 1100
 # define MAGIC_N					0x555AAA3C
@@ -36,9 +40,6 @@ typedef char						*t_ch;
 
 # define AVAILABLE					1
 # define UNAVAILABLE				0
-
-// вспомнить бы для чего эта хуета
-// # define PTR_NENMEM					((void *) - 1)
 
 typedef struct		s_main_page
 {
@@ -73,17 +74,18 @@ typedef struct		s_block
 	size_t			size;
 	struct s_block	*prev;
 	struct s_block	*next;
-	struct s_page	*page_head;
 	int				is_avail;
 }					t_block;
 
 /* GENERAL--------------------------------------------------------------------*/
 void				*m_malloc(size_t size);
 void				m_free(void *ptr);
-void				*allocate_memory(const size_t size);
 
+void				*alloc_memory(const size_t page_size);
+size_t				area_size_align(size_t area_size);
 /* PAGE-----------------------------------------------------------------------*/
 t_main_page			*main_page_get(void);
+void				main_page_update(t_page *page);
 t_page				*page_get_available(const size_t block_size);
 t_page				*page_create(const size_t size);
 t_page				*page_get_current_by_type(const size_t block_size);
