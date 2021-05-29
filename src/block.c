@@ -23,12 +23,10 @@ static void block_reserve_possible(t_page *page, t_block *block, const size_t ar
 		block_possible->page_head = page;
 		block_possible->prev = block;
 		block->next = block_possible;
-		page->avail_size = page->avail_size - STRUCT_BLOCK_SIZE;
 	}
 	else
 	{
 		block->size = block->size + unused_size;
-		page->avail_size = page->avail_size - unused_size;
 	}
 }
 
@@ -46,7 +44,6 @@ void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 
 	block->is_avail = UNAVAILABLE;
 	block->size = area_size;
-	page->avail_size = page->avail_size - area_size;
 	page->allocated_blocks++;
 	if (block->next)
 	{

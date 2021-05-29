@@ -5,7 +5,6 @@
 # include <sys/time.h>
 # include <sys/resource.h>
 # include <sys/mman.h>
-// # include <limits.h>
 # include <stdint.h>
 # include <unistd.h>
 
@@ -26,8 +25,8 @@
 # define STRUCT_PAGE_SIZE			(size_t)(sizeof(t_page))
 # define STRUCT_BLOCK_SIZE			(size_t)(sizeof(t_block))
 
-typedef void	*t_v;
-typedef char	*t_ch;
+typedef void						*t_v;
+typedef char						*t_ch;
 
 # define PAGE_UNUSED_ADDR(p)		((t_v)((t_ch)(p) + STRUCT_PAGE_SIZE))
 
@@ -39,46 +38,44 @@ typedef char	*t_ch;
 # define UNAVAILABLE				0
 
 // вспомнить бы для чего эта хуета
-# define PTR_NENMEM					((void *) - 1)
+// # define PTR_NENMEM					((void *) - 1)
 
-typedef enum				e_page_type
+typedef struct		s_main_page
+{
+	struct s_page	*tiny_head;
+	struct s_page	*tiny_last;
+	struct s_page	*small_head;
+	struct s_page	*small_last;
+	struct s_page	*large_head;
+	struct s_page	*large_last;
+}					t_main_page;
+
+typedef enum		e_page_type
 {
 	E_TINY,
 	E_SMALL,
 	E_LARGE
-}							t_page_type;
+}					t_page_type;
 
-typedef struct				s_main_page
+typedef struct		s_page
 {
-	struct s_page			*tiny_head;
-	struct s_page			*tiny_last;
-	struct s_page			*small_head;
-	struct s_page			*small_last;
-	struct s_page			*large_head;
-	struct s_page			*large_last;
-}							t_main_page;
+	size_t			size;
+	size_t			allocated_blocks;
+	struct s_page	*prev;
+	struct s_page	*next;
+	struct s_block	*block_head;
+	t_page_type		type;
+}					t_page;
 
-// новый лист добавляется в начало и становится head-листом
-typedef struct				s_page
+typedef struct		s_block
 {
-	size_t					size;
-	size_t					avail_size;				//удалить потом
-	size_t					allocated_blocks;
-	struct s_page			*prev;
-	struct s_page			*next;
-	struct s_block			*block_head;
-	t_page_type				type;
-}							t_page;
-
-typedef struct				s_block
-{
-	size_t					magic_num; //0x5FA
-	size_t					size;
-	struct s_block			*prev;
-	struct s_block			*next;
-	struct s_page			*page_head;
-	int						is_avail;
-}							t_block;
+	size_t			magic_num;
+	size_t			size;
+	struct s_block	*prev;
+	struct s_block	*next;
+	struct s_page	*page_head;
+	int				is_avail;
+}					t_block;
 
 /* GENERAL--------------------------------------------------------------------*/
 void				*m_malloc(size_t size);

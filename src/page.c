@@ -89,7 +89,6 @@ static void	page_init(t_page *page, const size_t page_size, const size_t block_s
 	memset(page, 0, STRUCT_PAGE_SIZE);
 	page->type = page_ident_type(block_size);
 	page->size = page_size;
-	page->avail_size = page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE; // удалить потом
 	page->block_head = block_add(PAGE_UNUSED_ADDR(page), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
 	page->block_head->page_head = page;
 	dbg_block(page->block_head);

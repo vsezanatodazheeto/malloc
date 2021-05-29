@@ -4,12 +4,15 @@
 
 
 // ОСТАНОВИЛИСЬ ЗДЕСЬ
-static void	main_page_deallocate_memory_extra(t_page **head, t_page *page)
+static void	main_page_deallocate_memory_extra(t_page **head, t_page **last, t_page *page)
 {
 	t_page	*tmp;
 
+	if (*last == page)
+		*last = page->prev;
 	if (*head == page)
 	{
+		page->prev = NULL;
 		*head = page->next;
 		munmap((t_v)page, page->size);
 		return ;
@@ -19,23 +22,25 @@ static void	main_page_deallocate_memory_extra(t_page **head, t_page *page)
 		if (tmp->next == page)
 		{
 			tmp->next = page->next;
+			if (page->next)
+				page->next->prev = tmp;
 			munmap((t_v)page, page->size);
 			return ;
 		}
 	}
 }
 
-static void	main_page_deallocate_memory(t_page *page)
+static void	dealloc_memory(t_page *page)
 {
 	t_main_page	*main_page;
 
 	main_page = main_page_get();
 	if (page->type == E_TINY)
-		main_page_deallocate_memory_extra(&main_page->tiny_head, page);
+		dealloc_memory_extra(&main_page->tiny_head, &main_page->tiny_last, page);
 	else if (page->type == E_SMALL)
-		main_page_deallocate_memory_extra(&main_page->small_head, page);
+		dealloc_memory_extra(&main_page->small_head, &main_page->small_last, page);
 	else
-		main_page_deallocate_memory_extra(&main_page->large_head, page);
+		dealloc_memory_extra(&main_page->large_head, &main_page->large_last, page);
 }
 
 /*PAGE------------------------------------------------------------------------*/
@@ -63,12 +68,7 @@ static void	free_defragmentation(t_block *block)
 	if (block->next)
 		block->next->prev = head_block;
 	head_block->next = block->next;
-	head_block->size = BLOCK_LAST_ADDR(block, block->size) - \
-										((t_ch)head_block + STRUCT_BLOCK_SIZE);
-	if (count > 1)
-	{
-		head_block->page_head->avail_size += count * STRUCT_BLOCK_SIZE;
-	}
+	head_block->size = BLOCK_LAST_ADDR(block, block->size) - ((t_ch)head_block + STRUCT_BLOCK_SIZE);
 	printf("free count blocks %d\n", count);
 }
 
@@ -144,19 +144,16 @@ void	m_free(void *ptr)
 
 	if (!ptr)
 		return ;
-	page = free_page_validation(ptr);
-	if (!page)
+	if (!(page = free_page_validation(ptr)))
 		return ;
-	block = free_block_validation(page, ptr);
-	if (!block)
+	if (!(block = free_block_validation(page, ptr)))
 		return ;
 	else
 		printf("BLOCK FOUNED!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 	block->is_avail = AVAILABLE;
 	block->magic_num = 0;
-	page->avail_size = page->avail_size + block->size; //удалить потом
 	if (--page->allocated_blocks < 1)
-		main_page_deallocate_memory(page);
+		dealloc_memory(page);
 	else
 		free_defragmentation(block);
 }
