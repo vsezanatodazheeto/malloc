@@ -23,7 +23,7 @@ t_block	*block_add(void *area, const size_t area_size)
 }
 
 // разобрать эту функцию
-static void block_reserve_possible(t_page *page, t_block *block, const size_t area_size, const size_t residual_size)
+static void block_reserve_possible(t_block *block, const size_t area_size, const size_t residual_size)
 {
 	t_block *block_possible;
 
@@ -34,9 +34,7 @@ static void block_reserve_possible(t_page *page, t_block *block, const size_t ar
 		block->next = block_possible;
 	}
 	else
-	{
 		block->size = block->size + residual_size;
-	}
 }
 
 /*
@@ -59,7 +57,7 @@ void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 		residual_size = (t_ch)block->next - BLOCK_LAST_ADDR(block, area_size);
 	else
 		residual_size = PAGE_LAST_ADDR(page) - BLOCK_LAST_ADDR(block, area_size);
-	block_reserve_possible(page, block, area_size, residual_size);
+	block_reserve_possible(block, area_size, residual_size);
 }
 
 /*

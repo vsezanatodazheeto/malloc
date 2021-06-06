@@ -1,46 +1,5 @@
 #include "../include/malloc.h"
 
-// WITH LAST:
-// static void	dealloc_memory_extra(t_page **head, t_page **last, t_page *page)
-// {
-// 	t_page	*tmp;
-
-// 	if (*last == page)
-// 		*last = page->prev;
-// 	if (*head == page)
-// 	{
-// 		page->prev = NULL;
-// 		*head = page->next;
-// 		munmap((t_v)page, page->size);
-// 		return ;
-// 	}
-// 	for (tmp = *head; tmp->next; tmp = tmp->next)
-// 	{
-// 		if (tmp->next == page)
-// 		{
-// 			tmp->next = page->next;
-// 			if (page->next)
-// 				page->next->prev = tmp;
-// 			munmap((t_v)page, page->size);
-// 			return ;
-// 		}
-// 	}
-// }
-
-// WITH LAST:
-// static void	dealloc_memory(t_page *page)
-// {
-// 	t_main_page	*main_page;
-
-// 	main_page = main_page_get();
-// 	if (page->type == E_TINY)
-// 		dealloc_memory_extra(&main_page->tiny_head, &main_page->tiny_last, page);
-// 	else if (page->type == E_SMALL)
-// 		dealloc_memory_extra(&main_page->small_head, &main_page->small_last, page);
-// 	else
-// 		dealloc_memory_extra(&main_page->large_head, &main_page->large_last, page);
-// }
-
 static void	dealloc_memory_extra(t_page **head, t_page *page)
 {
 	t_page	*tmp;
@@ -70,12 +29,18 @@ static void	dealloc_memory(t_page *page)
 	t_main_page	*main_page;
 
 	main_page = main_page_get();
-	if (page->type == E_TINY)
+	switch (page->type)
+	{
+	case E_TINY:
 		dealloc_memory_extra(&main_page->tiny_head, page);
-	else if (page->type == E_SMALL)
+		break;
+	case E_SMALL:
 		dealloc_memory_extra(&main_page->small_head, page);
-	else
+		break;
+	case E_LARGE:
 		dealloc_memory_extra(&main_page->large_head, page);
+		break;
+	}
 }
 
 // разобрать эту функцию
@@ -174,3 +139,44 @@ void	m_free(void *ptr)
 	else
 		free_defragmentation(block);
 }
+
+// WITH LAST:
+// static void	dealloc_memory_extra(t_page **head, t_page **last, t_page *page)
+// {
+// 	t_page	*tmp;
+
+// 	if (*last == page)
+// 		*last = page->prev;
+// 	if (*head == page)
+// 	{
+// 		page->prev = NULL;
+// 		*head = page->next;
+// 		munmap((t_v)page, page->size);
+// 		return ;
+// 	}
+// 	for (tmp = *head; tmp->next; tmp = tmp->next)
+// 	{
+// 		if (tmp->next == page)
+// 		{
+// 			tmp->next = page->next;
+// 			if (page->next)
+// 				page->next->prev = tmp;
+// 			munmap((t_v)page, page->size);
+// 			return ;
+// 		}
+// 	}
+// }
+
+// WITH LAST:
+// static void	dealloc_memory(t_page *page)
+// {
+// 	t_main_page	*main_page;
+
+// 	main_page = main_page_get();
+// 	if (page->type == E_TINY)
+// 		dealloc_memory_extra(&main_page->tiny_head, &main_page->tiny_last, page);
+// 	else if (page->type == E_SMALL)
+// 		dealloc_memory_extra(&main_page->small_head, &main_page->small_last, page);
+// 	else
+// 		dealloc_memory_extra(&main_page->large_head, &main_page->large_last, page);
+// }

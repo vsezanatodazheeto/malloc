@@ -7,7 +7,7 @@ endif
 #-------------------------------------------------------------------------------
 NAME = libft_malloc.a
 CC = gcc
-# CFLAGS = -Wall -Wextra -Werror -pedantic
+CFLAGS = -Wall -Wextra -Werror -pedantic
 #-------------------------------------------------------------------------------
 DH = include/
 H = malloc.h \
