@@ -2,9 +2,9 @@
 
 static t_page_type	page_ident_type(const size_t area_size)
 {
-	if (area_size <= (BLOCK_TINY_LIMIT))
+	if (area_size <= BLOCK_TINY_LIMIT)
 		return (E_TINY);
-	else if (area_size <= (BLOCK_SMALL_LIMIT))
+	else if (area_size <= BLOCK_SMALL_LIMIT)
 		return (E_SMALL);
 	return (E_LARGE);
 }
@@ -15,6 +15,7 @@ static void	page_init(t_page *page, const size_t page_size, const size_t block_s
 	page->type = page_ident_type(block_size);
 	page->size = page_size;
 	page->block_head = block_add(PAGE_UNUSED_ADDR(page), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
+	// page->block_avail_head = page->block_head;
 }
 
 /*
@@ -107,14 +108,11 @@ t_page	*page_get_current_by_type(const size_t block_size)
 ** если страница не найдена - пытаемся создать
 */
 
-t_page	*page_get_available(const size_t block_size)
+t_page	*page_get_available(const size_t area_size)
 {
 	t_page	*page;
 
-	if (!(page = page_get_current_by_type(block_size)))
-	{
-		if (!(page = page_create(block_size)))
-			return (NULL);
-	}
+	if (!(page = page_get_current_by_type(area_size)))
+		page = page_create(area_size);
 	return (page);
 }

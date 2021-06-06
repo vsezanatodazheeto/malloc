@@ -21,24 +21,29 @@ void				dbg_block(t_block *block)
 	printf("block->addr: [%p]\n", (t_v)block);
 	printf("block->prev: [%p]\n", (t_v)block->prev);
 	printf("block->next: [%p]\n", (t_v)block->next);
-	printf("block->avil: [%d]\n", block->is_avail);
+	printf("block->avil: [%d]\n", block->avail);
 	printf("block->size: [%zu]\n", block->size);
 	printf("-------------------------------------------\n");
 }
 
-void				dbg_gfinfo(const t_page_type type)
+void	dbg_gfinfo(const t_page_type type)
 {
-	t_page			*page;
-	int				block_size;
+	t_page	*page;
+	int		block_size;
 
-	if (type == E_TINY)
+	switch (type)
+	{
+	case E_TINY:
 		block_size = BLOCK_TINY_LIMIT;
-	else if (type == E_SMALL)
+		break;
+	case E_SMALL:
 		block_size = BLOCK_SMALL_LIMIT;
-	else
+		break;
+	case E_LARGE:
 		block_size = BLOCK_SMALL_LIMIT + 1;
-	page = page_get_current_by_type(block_size);
-	if (!page)
+		break;
+	}
+	if (!(page = page_get_current_by_type(block_size)))
 		return ;
 	printf("------------------%s--------------------\n", (type == E_TINY? "TINY PAGE" : type == E_SMALL? "SMALL PAGE" : "LARGE PAGE"));
 	printf("t_page size: %lu\n", STRUCT_PAGE_SIZE);
@@ -68,7 +73,7 @@ void				dbg_count_blocks_in_page(const t_page *page)
 	for (i = 1; block; ++i)
 	{
 		printf("\tB [#%d] [%lu bytes + %lu == %lu] [%p]:\n", i, block->size, STRUCT_BLOCK_SIZE, block->size + STRUCT_BLOCK_SIZE, (void *)block);
-		printf("\t\tis aviable:\t[%d]\n", block->is_avail);
+		printf("\t\tis aviable:\t[%d]\n", block->avail);
 		printf("\t\tarea:      \t[%lu]\n",block->size);
 		printf("\t\tblock->prev\t%p\n", (t_v)block->prev);
 		printf("\t\tblock->next\t%p\n", (t_v)block->next);

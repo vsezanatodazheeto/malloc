@@ -1,8 +1,100 @@
 #include "../include/malloc.h"
 
+#define BITW 8 // убрать потом эту хуйню
+
 // переменная для того, чтобы узнать, был ли блок перезаписан (пропали данные)
-// пока что так
+// пока что так, ПЕРЕДЕЛАТЬ ЭТУ ХУЙНЮ
 void	*g_e_rewrite;
+
+void	*alloc_memory(const size_t page_size)
+{
+	void	*data_memory;
+
+	data_memory = mmap(NULL, \
+						page_size, \
+						PROT_READ | PROT_WRITE, \
+						MAP_PRIVATE | MAP_ANON, \
+						-1, \
+						0);
+	if (data_memory == MAP_FAILED)
+		return (NULL);
+	return (data_memory);
+}
+
+// area_size_align():
+// делаем выравнивание area_size в зависимости от разрядности, проверяем на переполнение
+
+size_t	area_size_align(size_t area_size)
+{
+	if (((((area_size - 1) / BITW) * BITW) + BITW) < area_size)
+	{
+		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
+		return (0);
+	}
+	return ((((area_size - 1) / BITW) * BITW) + BITW);
+}
+
+void	*m_calloc(size_t nmemb, size_t memb_size)
+{
+	void	*area;
+	size_t	size;
+
+	if (!nmemb || !memb_size)
+		return (NULL);
+	size = nmemb * memb_size;
+	if (size / memb_size != nmemb)
+	{
+		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
+		return (NULL);
+	}
+	area = m_malloc(size);
+	if (!area)
+		return (NULL);
+	memset(area, 0, size);
+	return (area);
+}
+
+// 1. area_size_align:
+// выравнивание будущей области памяти (area_size)
+// 2. page_get_available:
+// получаем текущую или создаем новую (при отсутствии страниц) страницу нужного типа
+// ДОДЕЛАТЬ
+
+void	*m_malloc(size_t area_size)
+{
+	t_page	*page;
+	t_block	*block;
+
+	if (!(area_size = area_size_align(area_size)))
+		return (NULL);
+	if (!(page = page_get_available(area_size)))
+		return (NULL);
+	if (!(block = block_get_available(page, area_size)))
+	{
+		if (g_e_rewrite)
+		{
+			dprintf(2, "Error: block rewriting detected at [%p], stop work\n", g_e_rewrite);
+			return (NULL);
+		}
+		page = page_create(area_size);
+		if (!(block = block_get_available(page, area_size)))
+			return (NULL);
+	}
+	return ((t_v)BLOCK_LAST_ADDR(block, 0));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 ** realloc() меняет размер блока памяти, на который указывает ptr,
@@ -44,58 +136,3 @@ void	*g_e_rewrite;
 // 	// 	return ;
 // 	return (NULL);
 // }
-
-void	*m_calloc(size_t nmemb, size_t memb_size)
-{
-	void	*area;
-	size_t	size;
-
-	if (!nmemb || !memb_size)
-		return (NULL);
-	size = nmemb * memb_size;
-	if (size / memb_size != nmemb)
-	{
-		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
-		return (NULL);
-	}
-	area = m_malloc(size);
-	if (!area)
-		return (NULL);
-	memset(area, 0, size);
-	return (area);
-}
-
-/*
-** 1. area_size_align:
-** выравнивание будущей области памяти (area_size)
-**
-** 2. page_get_available:
-** получаем текущую или создаем новую (при отсутствии страниц) страницу нужного типа
-**
-** 3. block_get_available
-**
-*/
-
-void	*m_malloc(size_t area_size)
-{
-	t_page	*page;
-	t_block	*block;
-
-	if (!(area_size = area_size_align(area_size)))
-		return (NULL);
-	if (!(page = page_get_available(area_size)))
-		return (NULL);
-	if (!(block = block_get_available(page, area_size)))
-	{
-		if (g_e_rewrite)
-		{
-			dprintf(2, "Error: block rewriting detected at [%p], stop work\n", g_e_rewrite);
-			return (NULL);
-		}
-		page = page_create(area_size);
-		if (!(block = block_get_available(page, area_size)))
-			return (NULL);
-		// printf("СТРАНИЧКА ЗАКОНЧИЛАСЬ !!!!!!!\n");
-	}
-	return ((t_v)BLOCK_LAST_ADDR(block, 0));
-}

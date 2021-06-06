@@ -18,7 +18,7 @@ DSRC = src/
 SRC = \
 	malloc \
 	page \
-	extra_main_page \
+	main_page \
 	block \
 	free \
 	debug

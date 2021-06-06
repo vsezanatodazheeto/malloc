@@ -44,11 +44,11 @@ typedef char						*t_ch;
 typedef struct		s_main_page
 {
 	struct s_page	*tiny_head;
-	struct s_page	*tiny_last;
+	// struct s_page	*tiny_last;
 	struct s_page	*small_head;
-	struct s_page	*small_last;
+	// struct s_page	*small_last;
 	struct s_page	*large_head;
-	struct s_page	*large_last;
+	// struct s_page	*large_last;
 }					t_main_page;
 
 typedef enum		e_page_type
@@ -62,19 +62,19 @@ typedef struct		s_page
 {
 	size_t			size;
 	size_t			allocated_blocks;
+	t_page_type		type;
 	struct s_page	*prev;
 	struct s_page	*next;
 	struct s_block	*block_head;
-	t_page_type		type;
 }					t_page;
 
 typedef struct		s_block
 {
 	size_t			magic_num;
 	size_t			size;
+	int				avail;
 	struct s_block	*prev;
 	struct s_block	*next;
-	int				is_avail;
 }					t_block;
 
 /* GENERAL--------------------------------------------------------------------*/
