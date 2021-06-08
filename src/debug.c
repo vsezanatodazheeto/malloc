@@ -4,7 +4,7 @@ void	dbg_page(t_page *page)
 {
 	printf("-------------------------------------------\n");
 	printf("page addr: [%p]\n", (t_v)page);
-	printf("page->allocated_blocks: [%ld]\n", page->allocated_blocks);
+	printf("page->allocated_blocks: [%ld]\n", page->block_qt);
 	printf("page->size: [%zu]\n", page->size);
 	printf("page->type: [%s]\n", page->type == 0 ? "TINY" : page->type == 1 ? "SMALL" : "LARGE");
 	printf("-------------------------------------------\n");
@@ -56,7 +56,7 @@ void	dbg_gfinfo(const t_page_type type)
 		else
 			printf("[%lu]-[page size] = [%lu] b", page->size, page->size - STRUCT_PAGE_SIZE);
 		printf("[%p]:\n", (void *)page);
-		printf("\tallocated_blocks_count: [%ld]\n", page->allocated_blocks);
+		printf("\tallocated_blocks_count: [%ld]\n", page->block_qt);
 		dbg_count_blocks_in_page(page);
 	}
 }

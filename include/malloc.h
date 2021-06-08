@@ -61,7 +61,7 @@ typedef enum		e_page_type
 typedef struct		s_page
 {
 	size_t			size;
-	size_t			allocated_blocks;
+	size_t			block_qt;
 	t_page_type		type;
 	struct s_page	*prev;
 	struct s_page	*next;
@@ -91,7 +91,7 @@ t_page				*page_create(const size_t size);
 t_page				*page_get_current_by_type(const size_t block_size);
 
 /* BLOCK----------------------------------------------------------------------*/
-t_block				*block_get_available(const t_page *page, const size_t block_size);
+t_block				*block_get_available(const t_page *page, const size_t area_size);
 t_block				*block_add(void *page, const size_t area_size);
 
 /* DEBUG----------------------------------------------------------------------*/

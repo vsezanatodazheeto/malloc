@@ -9,7 +9,8 @@ typedef struct		s_unpd
 	struct s_unpd	*prev;
 }					t_unpd;
 
-# define L_ELEM_LOC(p_n, p)	((size_t)((char *)p_n - (char *)p))
+// # define L_ELEM_LOC(p_n, p)	((size_t)((char *)p_n - (char *)p))
+// # define L_ELEM_LOC1(p)	((size_t)((char *)*(p->next) - (char *)*p))
 
 static void *list_create(size_t size)
 {
@@ -89,7 +90,7 @@ int main()
 
 	for (int i = 0; i < 10; i++)
 	{
-		list_dl_add_front((void *)&head, L_ELEM_LOC(&(head->next), &head), (char *)&(head->prev) - (char *)head, sizeof(*head));
+		// list_dl_add_front((void *)&head, L_ELEM_LOC1(&head), (char *)&(head->prev) - (char *)head, sizeof(*head));
 		head->gsex = i;
 		// list_dl_add_back((void *)&last, (char *)&(head->next) - (char *)head, (char *)&(head->prev) - (char *)head, sizeof(*head));
 		// if (!head)
