@@ -55,13 +55,15 @@ t_block	*block_get_available(const t_page *page, const size_t area_size)
 		return (NULL);
 	for (block = page->block_head; block; block = block->next)
 	{
+		// printf("ищем блок\n");
 		if (block->magic_num != MAGIC_N)
 		{
 			dprintf(2, "Error: data overwrite detected at [%p]\n", (t_v)block);
 			return (NULL);
 		}
-		else if (block->size >= area_size)
+		else if (block->avail && block->size >= area_size)
 		{
+			// printf("нашли подходящий\n");
 			block_reserve((t_page *)page, block, area_size);
 			return (block);
 		}

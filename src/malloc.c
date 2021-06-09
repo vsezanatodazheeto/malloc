@@ -11,7 +11,10 @@ void	*alloc_memory(const size_t page_size)
 						-1, \
 						0);
 	if (data_memory == MAP_FAILED)
+	{
+		printf("NO MEMORY!!!!!\n");
 		return (NULL);
+	}
 	return (data_memory);
 }
 
@@ -52,8 +55,11 @@ void *m_malloc(size_t area_size)
 	else
 	{
 		if ((page = page_get_available(area_size)))
+		{
+			printf("%p:\n", (t_v)page);
 			if ((block = block_get_available(page, area_size)))
 				return ((t_v)BLOCK_LAST_ADDR(block, 0));
+		}
 	}
 	return (NULL);
 }

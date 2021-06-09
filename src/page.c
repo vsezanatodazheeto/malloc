@@ -40,6 +40,7 @@ t_page	*page_create(const size_t block_size)
 	t_page	*page;
 	size_t	page_size;
 
+	// printf("СОЗДАЕМ\n");
 	if (!(page_size = page_ident_size(block_size)))
 		return (NULL);
 	if (!(page = (t_page *)alloc_memory(page_size)))
