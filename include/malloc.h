@@ -44,11 +44,8 @@ typedef char						*t_ch;
 typedef struct		s_main_page
 {
 	struct s_page	*tiny_head;
-	// struct s_page	*tiny_last;
 	struct s_page	*small_head;
-	// struct s_page	*small_last;
 	struct s_page	*large_head;
-	// struct s_page	*large_last;
 }					t_main_page;
 
 typedef enum		e_page_type
@@ -95,10 +92,11 @@ t_block				*block_get_available(const t_page *page, const size_t area_size);
 t_block				*block_add(void *page, const size_t area_size);
 
 /* DEBUG----------------------------------------------------------------------*/
-void				dbg_block(t_block *block);
-void				dbg_page(t_page *page);
-void				dbg_count_blocks_in_page(const t_page *page);
-void				dbg_count_pages(const t_page_type type);
-void				dbg_gfinfo(const t_page_type type);
+void 				show_alloc_mem(void);
+// void				dbg_block(t_block *block);
+// void				dbg_page(t_page *page);
+// void				dbg_count_blocks_in_page(const t_page *page);
+// void				dbg_count_pages(const t_page_type type);
+// void				dbg_gfinfo(const t_page_type type);
 
 # endif
