@@ -4,25 +4,34 @@
 #define PR_SMALL "SMALL"
 #define PR_LARGE "LARGE"
 
-void	dbg_count_blocks_in_page(const t_block *block)
+static void	dbg_count_blocks_in_page(const t_page *page)
 {
-	uint32_t	i;
+	t_block *block;
+	int flag = 0, i = 1;
 
-	if (block)
-		printf("INDEX | ADDRES      | AVAIL | SIZE\n");
-		printf("------|-------------|-------|---------------------------\n");
-	for (i = 1; block; ++i)
+	for (block = page->block_head; block; block = block->next)
 	{
-		printf("%-5d | ", i);
-		printf("%p | ", (t_v)block);
+		if (page->type != E_LARGE && !flag)
+		{
+			printf("%-14p | ", (t_v)page);
+			flag = 1;
+		}
+		else if (page->type == E_LARGE)
+			printf("%-14p | ", (t_v)page);
+		else
+			printf("%-14c | ", ' ');
+		printf("%-7d | ", i++);
+		printf("%-14p | ", (t_v)block);
+		printf("%-14p | ", BLOCK_LAST_ADDR(block, 0));
 		printf("%-5d | ", block->avail);
 		printf("%zu\n", block->size);
-		block = block->next;
 	}
 }
 
 static void show_alloc_mem_extra(const t_page *page)
 {
+	int flag = 0;
+
 	switch (page->type)
 	{
 	case E_TINY:
@@ -35,20 +44,17 @@ static void show_alloc_mem_extra(const t_page *page)
 		printf("\n%s:\n", PR_LARGE);
 		break;
 	}
-	// 0x10fa470004136
-	// 0x107700030
 	for (int i = 1; page; ++i, page = page->next)
 	{
-		printf("\n");
-		printf("%d\t", i);
-		printf("%p\t", (t_v)page);
-		printf("%lu bytes\n", page->size - STRUCT_PAGE_SIZE);
-		// printf("\tallocated_blocks_count: [%ld]\n", page->block_qt);
-		dbg_count_blocks_in_page(page->block_head);
+		if (page->block_last && flag == 0)
+		{
+			flag = 1;
+			printf("PAGE META      | INDEX   | BLOCK META     | BLOCK          | AVAIL | SIZE\n");
+			printf("---------------|---------|----------------|----------------|-------|------------\n");
+		}
+		dbg_count_blocks_in_page(page);
 	}
 }
-
-// 0x10cf52000
 
 void show_alloc_mem(void)
 {
@@ -62,38 +68,3 @@ void show_alloc_mem(void)
 	if (main_page->large_head)
 		show_alloc_mem_extra(main_page->large_head);
 }
-
-// void	dbg_gfinfo(const t_page_type type)
-// {
-// 	t_page	*page;
-// 	int		block_size;
-
-// 	switch (type)
-// 	{
-// 	case E_TINY:
-// 		block_size = BLOCK_TINY_LIMIT;
-// 		break;
-// 	case E_SMALL:
-// 		block_size = BLOCK_SMALL_LIMIT;
-// 		break;
-// 	case E_LARGE:
-// 		block_size = BLOCK_SMALL_LIMIT + 1;
-// 		break;
-// 	}
-// 	if (!(page = page_get_current_by_type(block_size)))
-// 		return ;
-// 	printf("------------------%s--------------------\n", (type == E_TINY? "TINY PAGE" : type == E_SMALL? "SMALL PAGE" : "LARGE PAGE"));
-// 	printf("t_page size: %lu\n", STRUCT_PAGE_SIZE);
-// 	printf("t_block size: %lu\n", STRUCT_BLOCK_SIZE);
-// 	for (int i = 1; page; ++i, page = page->next)
-// 	{
-// 		printf("P [%d] ", i);
-// 		if (page->type == E_LARGE)
-// 			printf("[%lu b]", page->size);
-// 		else
-// 			printf("[%lu]-[page size] = [%lu] b", page->size, page->size - STRUCT_PAGE_SIZE);
-// 		printf("[%p]:\n", (void *)page);
-// 		printf("\tallocated_blocks_count: [%ld]\n", page->block_qt);
-// 		dbg_count_blocks_in_page(page);
-// 	}
-// }

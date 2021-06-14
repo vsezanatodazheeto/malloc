@@ -1,7 +1,6 @@
 #ifndef MALLOC_H
 # define MALLOC_H
 
-# include "malloc_errors.h"
 # include <sys/time.h>
 # include <sys/resource.h>
 # include <sys/mman.h>
@@ -44,8 +43,11 @@ typedef char						*t_ch;
 typedef struct		s_main_page
 {
 	struct s_page	*tiny_head;
+	struct s_page	*tiny_last;
 	struct s_page	*small_head;
+	struct s_page	*small_last;
 	struct s_page	*large_head;
+	struct s_page	*large_last;
 }					t_main_page;
 
 typedef enum		e_page_type
@@ -58,11 +60,12 @@ typedef enum		e_page_type
 typedef struct		s_page
 {
 	size_t			size;
-	size_t			block_qt;
+	size_t			block_unvail_qt;
 	t_page_type		type;
 	struct s_page	*prev;
 	struct s_page	*next;
 	struct s_block	*block_head;
+	struct s_block	*block_last;
 }					t_page;
 
 typedef struct		s_block
@@ -85,7 +88,6 @@ t_main_page			*main_page_get(void);
 void				main_page_update(t_page *page);
 t_page				*page_get_available(const size_t block_size);
 t_page				*page_create(const size_t size);
-t_page				*page_get_current_by_type(const size_t block_size);
 
 /* BLOCK----------------------------------------------------------------------*/
 t_block				*block_get_available(const t_page *page, const size_t area_size);
@@ -93,10 +95,5 @@ t_block				*block_add(void *page, const size_t area_size);
 
 /* DEBUG----------------------------------------------------------------------*/
 void 				show_alloc_mem(void);
-// void				dbg_block(t_block *block);
-// void				dbg_page(t_page *page);
-// void				dbg_count_blocks_in_page(const t_page *page);
-// void				dbg_count_pages(const t_page_type type);
-// void				dbg_gfinfo(const t_page_type type);
 
 # endif

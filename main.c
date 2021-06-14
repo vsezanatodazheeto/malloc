@@ -3,16 +3,17 @@
 
 // 8192
 // 65536
+# define QT 25
 
 int			main(int ac, char **kek)
 {
 	t_page *page;
 	t_block *block;
-	void	*p[25] = {};
+	void	*p[QT] = {};
 	size_t size;
 
 	size = 1;
-	for (int i = 0; i < 25; i++)
+	for (int i = 0; i < QT; i++)
 	{
 		if (!(p[i] = m_malloc(size)))
 		{
@@ -22,8 +23,10 @@ int			main(int ac, char **kek)
 		else
 			memset(p[i], 'c', size);
 		size = size + size;
+		// show_alloc_mem();
 	}
-	m_free(p[2]);
+	// m_free(p[2]);
+	// m_malloc(32);
 	show_alloc_mem();
 
 	// 199 блоков tiny

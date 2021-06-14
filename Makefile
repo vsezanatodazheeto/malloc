@@ -1,51 +1,45 @@
-# DETERMINE THE BIT DEPTH FOR MEMORY ALIGNMENT----------------------------------
-ifeq ($(shell uname -m), x86_64)
-	BITW_RULE="BITW=8"
-else
-	BITW_RULE="BITW=4"
-endif
-#-------------------------------------------------------------------------------
-NAME = libft_malloc.a
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic
-#-------------------------------------------------------------------------------
-DH = include/
-H = malloc.h \
-	malloc_errors.h
-H := $(addprefix $(DH), $(H))
-#-------------------------------------------------------------------------------
-DSRC = src/
-SRC = \
-	malloc \
-	page \
-	main_page \
-	block \
-	free \
-	debug
-SRC := $(addprefix $(DSRC), $(addsuffix .c, $(SRC)))
-#-------------------------------------------------------------------------------
-DOBJ = obj/
-OBJ = $(patsubst $(DSRC)%, $(DOBJ)%, $(SRC))
-OBJ := $(patsubst %.c, %.o, $(OBJ))
-#-------------------------------------------------------------------------------
-all:
-	@$(MAKE) -s $(NAME)
+.PHONY: clean fclean re
 
-$(NAME): $(DOBJ) $(OBJ)
-	gcc main.c $(OBJ) -I$(DH)
-	# @ar -rc $(NAME) $(OBJ)
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+
+NAME = libft_malloc_$(HOSTTYPE).so
+LIB_NAME = libft_malloc.so
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -pedantic -g
+
+#-------------------------------------------------------------------------------
+D_H = include/
+H = malloc.h
+H := $(addprefix $(D_H), $(H))
+
+#-------------------------------------------------------------------------------
+D_SRC = src/
+SRC = malloc.c page.c main_page.c block.c free.c debug.c
+SRC := $(addprefix $(D_SRC), $(SRC))
+
+#-------------------------------------------------------------------------------
+D_OBJ = obj/
+OBJ := $(patsubst $(D_SRC)%.c, $(D_OBJ)%.o, $(SRC))
+
+#-------------------------------------------------------------------------------
+
+all: $(NAME)
+
+$(NAME): $(D_OBJ) $(OBJ) Makefile
+	$(CC) -shared -o $(NAME) $(OBJ)
+	ln -sf $(NAME) $(LIB_NAME)
 	@echo "--------------------------------"
 	@echo "$(NAME) compiled"
 	@echo "--------------------------------"
 
-$(DOBJ):
-	@mkdir -p $(DOBJ)
+$(D_OBJ):
+	@mkdir -p $(D_OBJ)
 
-$(DOBJ)%.o: $(DSRC)%.c $(H) Makefile
+$(D_OBJ)%.o: $(D_SRC)%.c $(H)
 	@echo $<
-	@$(CC) $(CFLAGS) \
-	-D BITW=8 \
-	-I$(DH) -c $< -o $@
+	@$(CC) $(CFLAGS) -fPIC -I $(D_H) -c $< -o $@
 
 clean:
 	@rm -rf $(OBJ)
@@ -55,4 +49,3 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re

@@ -1,6 +1,3 @@
-free:
-	g_e_rewrite вынести для каждой страницы
-
 realloc:
 	просто сделать
 
@@ -19,3 +16,7 @@ makefile:
 ЗАРОБРАТЬСЯ С НАЗВАНИЯМИ area_size, block_size, size в функциях
 
 Https://nouveau.freedesktop.org/Valgrind-mmt.html -- проверка на утечки
+
+
+
+СДЕЛАТЬ ПРОХОД ПО PAGE С САМОГО НАЧАЛА, ЗАПИСЫВАТЬ САМЫЙ ЖИРНЫЙ КУСОК, КОТОРЫЙ СВОБОДЕН

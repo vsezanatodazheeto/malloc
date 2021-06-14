@@ -9,8 +9,8 @@ t_block	*block_add(void *area, const size_t area_size)
 	return (block);
 }
 
-// ПЕРЕИМЕНОВАТЬ ЭТУ ФУНКЦИЮ
-static void block_reserve_possible(t_block *block, const size_t area_size, const size_t rest_size)
+// if block added, need to update page->block_last, returns 1
+static int	block_reserve_possible(t_block *block, const size_t area_size, const size_t rest_size)
 {
 	t_block *block_possible;
 
@@ -19,9 +19,11 @@ static void block_reserve_possible(t_block *block, const size_t area_size, const
 		block_possible = block_add(BLOCK_LAST_ADDR(block, area_size), rest_size - STRUCT_BLOCK_SIZE);
 		block_possible->prev = block;
 		block->next = block_possible;
+		return (1);
 	}
 	else
 		block->size = block->size + rest_size;
+	return (0);
 }
 
 // block_reserve:
@@ -33,14 +35,18 @@ void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 {
 	size_t	rest_size;
 
-	page->block_qt++;
+	page->block_unvail_qt++;
 	block->avail = UNAVAILABLE;
 	block->size = area_size;
 	if (block->next)
 		rest_size = (t_ch)block->next - BLOCK_LAST_ADDR(block, area_size);
 	else
 		rest_size = PAGE_LAST_ADDR(page) - BLOCK_LAST_ADDR(block, area_size);
-	block_reserve_possible(block, area_size, rest_size);
+	if (block_reserve_possible(block, area_size, rest_size))
+	{
+		if (page->block_last < block->next)
+			page->block_last = block->next;
+	}
 }
 
 // block_get_available:
@@ -49,21 +55,19 @@ void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 
 t_block	*block_get_available(const t_page *page, const size_t area_size)
 {
-	t_block	*block = NULL;
+	t_block	*block;
 
 	if (!page && !(page = page_create(area_size)))
 		return (NULL);
 	for (block = page->block_head; block; block = block->next)
 	{
-		// printf("ищем блок\n");
-		if (block->magic_num != MAGIC_N)
+		if (block->magic_num != MAGIC_N) // сега
 		{
 			dprintf(2, "Error: data overwrite detected at [%p]\n", (t_v)block);
 			return (NULL);
 		}
 		else if (block->avail && block->size >= area_size)
 		{
-			// printf("нашли подходящий\n");
 			block_reserve((t_page *)page, block, area_size);
 			return (block);
 		}

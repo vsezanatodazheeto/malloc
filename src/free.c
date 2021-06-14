@@ -1,9 +1,11 @@
 #include "../include/malloc.h"
 
-static void	dealloc_memory_extra(t_page **head, t_page *page)
+static void	dealloc_memory_extra(t_page **head, t_page **last, t_page *page)
 {
 	t_page	*tmp;
 
+	if (*last == page)
+		*last = page->prev;
 	if (*head == page)
 	{
 		page->prev = NULL;
@@ -32,13 +34,13 @@ static void	dealloc_memory(t_page *page)
 	switch (page->type)
 	{
 	case E_TINY:
-		dealloc_memory_extra(&main_page->tiny_head, page);
+		dealloc_memory_extra(&main_page->tiny_head, &main_page->tiny_last, page);
 		break;
 	case E_SMALL:
-		dealloc_memory_extra(&main_page->small_head, page);
+		dealloc_memory_extra(&main_page->small_head, &main_page->small_last, page);
 		break;
 	case E_LARGE:
-		dealloc_memory_extra(&main_page->large_head, page);
+		dealloc_memory_extra(&main_page->large_head, &main_page->large_last, page);
 		break;
 	}
 }
@@ -133,8 +135,8 @@ void	m_free(void *ptr)
 	if (!(block = free_block_validation(page, ptr)))
 		return ;
 	block->avail = AVAILABLE;
-	page->block_qt--;
-	if (page->block_qt < 1)
+	page->block_unvail_qt--;
+	if (page->block_unvail_qt < 1)
 		dealloc_memory(page);
 	else
 		free_defragmentation(block);

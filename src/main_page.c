@@ -1,16 +1,19 @@
 #include "../include/malloc.h"
 
-static void	main_page_update_extra(t_page **head_old, t_page *head_new)
+static void	main_page_update_extra(t_page ** head, t_page **last, t_page *new)
 {
-	t_page *temp;
-
-	temp = *head_old;
-	*head_old = head_new;
-	head_new->next = temp;
+	if (!*head)
+		*head = new;
+	else
+	{
+		(*last)->next = new;
+		new->prev = *last;
+	}
+	*last = new;
 }
 
 // main_page_update:
-// a.k.a push front
+// a.k.a push back
 
 void	main_page_update(t_page *page)
 {
@@ -20,13 +23,13 @@ void	main_page_update(t_page *page)
 	switch (page->type)
 	{
 	case E_TINY:
-		main_page_update_extra(&m_page->tiny_head, page);
+		main_page_update_extra(&m_page->tiny_head, &m_page->tiny_last, page);
 		break;
 	case E_SMALL:
-		main_page_update_extra(&m_page->small_head, page);
+		main_page_update_extra(&m_page->small_head, &m_page->small_last, page);
 		break;
 	case E_LARGE:
-		main_page_update_extra(&m_page->large_head, page);
+		main_page_update_extra(&m_page->large_head, &m_page->large_last, page);
 		break;
 	}
 }
