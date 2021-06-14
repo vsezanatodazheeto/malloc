@@ -80,5 +80,3 @@ t_page	*page_get_available(const size_t area_size)
 		page = page_create(area_size);
 	return (page);
 }
-
-// сега с large_last

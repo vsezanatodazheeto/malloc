@@ -1,10 +1,12 @@
 .PHONY: clean fclean re
 
-ifeq ($(HOSTTYPE),)
+HOSTTYPE =
+ifeq ($(HOSTTYPE = ), )
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-NAME = libft_malloc_$(HOSTTYPE).so
+VERSION = 1
+NAME = libft_malloc_$(HOSTTYPE).so.$(VERSION)
 LIB_NAME = libft_malloc.so
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic -g
@@ -24,15 +26,19 @@ D_OBJ = obj/
 OBJ := $(patsubst $(D_SRC)%.c, $(D_OBJ)%.o, $(SRC))
 
 #-------------------------------------------------------------------------------
+# @echo $(FILES)
 
 all: $(NAME)
 
+# gcc -g -shared -Wl,-soname,libhello.so.0 -o libhello.so.0.0 libhello.o -lc
+# @echo $(NAME)
+
 $(NAME): $(D_OBJ) $(OBJ) Makefile
-	$(CC) -shared -o $(NAME) $(OBJ)
-	ln -sf $(NAME) $(LIB_NAME)
-	@echo "--------------------------------"
+	@$(CC) $(CFLAGS) -shared -Wl,-soname,$(NAME) -o $(LIB_NAME) $(OBJ) -lc
+	@ln -sf $(NAME) $(LIB_NAME)
+	@echo "--------------------------------------"
 	@echo "$(NAME) compiled"
-	@echo "--------------------------------"
+	@echo "--------------------------------------"
 
 $(D_OBJ):
 	@mkdir -p $(D_OBJ)

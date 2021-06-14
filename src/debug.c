@@ -22,7 +22,7 @@ static void	dbg_count_blocks_in_page(const t_page *page)
 			printf("%-14c | ", ' ');
 		printf("%-7d | ", i++);
 		printf("%-14p | ", (t_v)block);
-		printf("%-14p | ", BLOCK_LAST_ADDR(block, 0));
+		printf("%-14p | ", (t_v)BLOCK_LAST_ADDR(block, 0));
 		printf("%-5d | ", block->avail);
 		printf("%zu\n", block->size);
 	}
