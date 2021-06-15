@@ -12,7 +12,12 @@
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [],
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/home/m1c/yshawn/myself/malloc/"
+                }
+            ],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [

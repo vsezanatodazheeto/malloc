@@ -15,7 +15,6 @@ static void	page_init(t_page *page, const size_t page_size, const size_t block_s
 	page->type = page_ident_type(block_size);
 	page->size = page_size;
 	page->block_head = block_place(PAGE_UNUSED_ADDR(page), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
-	page->block_last = page->block_head;
 }
 
 // page_ident_size:
@@ -24,9 +23,9 @@ static void	page_init(t_page *page, const size_t page_size, const size_t block_s
 static size_t	page_ident_size(const size_t area_size)
 {
 	if (area_size <= BLOCK_TINY_LIMIT)
-		return (PAGP_TINY_SIZE);
+		return (PAGE_TINY_SIZE);
 	else if (area_size <= BLOCK_SMALL_LIMIT)
-		return (PAGP_SMALL_SIZE);
+		return (PAGE_SMALL_SIZE);
 	else if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
 	{
 		dprintf(2, "Error: overflow occured in: %s\n", __func__);
@@ -73,7 +72,7 @@ t_page	*page_get_available(const size_t area_size)
 		page = main_page->small_head;
 		break;
 	case P_LARGE:
-		page = main_page->large_head;
+		page = main_page->large_last;
 		break;
 	}
 	if (!page)

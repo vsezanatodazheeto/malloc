@@ -15,9 +15,9 @@
 // 1432005180
 // 0101 0101 0101 1010 1010 1010 0011 1100
 # define MAGIC_N					0x555AAA3C
-# define PAGP_TINY_SIZE				(16 * getpagesize())
+# define PAGE_TINY_SIZE				(16 * getpagesize())
 # define BLOCK_TINY_LIMIT			1024
-# define PAGP_SMALL_SIZE			(128 * getpagesize())
+# define PAGE_SMALL_SIZE			(128 * getpagesize())
 # define BLOCK_SMALL_LIMIT			8192
 
 # define STRUCT_MAIN_PAGE_SIZE		(size_t)(sizeof(t_main_page))
@@ -61,7 +61,6 @@ typedef struct		s_page
 	struct s_page	*prev;
 	struct s_page	*next;
 	struct s_block	*block_head;
-	struct s_block	*block_last;
 }					t_page;
 
 typedef struct		s_block
@@ -74,6 +73,9 @@ typedef struct		s_block
 }					t_block;
 
 /* GENERAL--------------------------------------------------------------------*/
+void		*malloc(size_t area_size);
+void		free(void *ptr);
+void		*realloc(void *ptr, size_t area_size);
 void		*alloc_memory(const size_t page_size);
 t_block		*block_validation(t_page *page, void *ptr);
 t_page		*page_validation(void *ptr);

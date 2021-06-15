@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 clear
 
-make
+make > /dev/null
 if [ $? -ne 0 ];then
 	exit
 fi
@@ -18,16 +18,15 @@ function func_compile() {
 
 function func_run() {
 	for i in $@; do
-		./$SUBDIR/$i &> /dev/null | tee "$RESDIR/$i.txt"
-		# ./$SUBDIR/$i
+		# ./$SUBDIR/$i &> /dev/null | tee "$RESDIR/$i.txt"
+		./$SUBDIR/$i &> "$RESDIR/$i.txt"
 	done
 }
 
 D1="test_1"
 D2="test_2"
 D3="test_3"
-D=($D1 $D2 $D3 $D4 $D5 $D6 $D7 $D8 $D9 $D10 $D11 $D12 $D13 $D14 $D15 $D16 \
-   $D17 $D18 $D19 $D20)
+D=($D1 $D2 $D3)
 
 func_compile "${D[@]}"
 
