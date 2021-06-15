@@ -12,17 +12,13 @@
 # include <stdio.h>
 # include <string.h>
 
-// tiny block	<= 128 	|	tiny page == 2 * getpagesize() (2 * 4096)
-// small block	<= 1024	|	small page == 16 * getpagesize() (16 * 4096)
-// large block	> 1024	|	large page == area_size + malloc meta data
-
 // 1432005180
 // 0101 0101 0101 1010 1010 1010 0011 1100
 # define MAGIC_N					0x555AAA3C
-# define PAGE_TINY_SIZE				(2 * getpagesize())
-# define BLOCK_TINY_LIMIT			128
-# define PAGE_SMALL_SIZE			(16 * getpagesize())
-# define BLOCK_SMALL_LIMIT			1024
+# define PAGP_TINY_SIZE				(16 * getpagesize())
+# define BLOCK_TINY_LIMIT			1024
+# define PAGP_SMALL_SIZE			(128 * getpagesize())
+# define BLOCK_SMALL_LIMIT			8192
 
 # define STRUCT_MAIN_PAGE_SIZE		(size_t)(sizeof(t_main_page))
 # define STRUCT_PAGE_SIZE			(size_t)(sizeof(t_page))
@@ -34,7 +30,7 @@ typedef char						*t_ch;
 # define PAGE_UNUSED_ADDR(p)		((t_v)((t_ch)(p) + STRUCT_PAGE_SIZE))
 
 # define PAGE_LAST_ADDR(p)			((t_ch)p + p->size)
-# define BLOCK_LAST_ADDR(b, a)		((t_ch)b + a + STRUCT_BLOCK_SIZE)
+# define BLOCK_LAST_ADDR(b, a)		((t_ch)b + STRUCT_BLOCK_SIZE + a)
 # define BLOCK_FIRST_ADDR(b)		((t_block *)((t_ch)b - STRUCT_BLOCK_SIZE))
 
 # define AVAILABLE					1
@@ -52,9 +48,9 @@ typedef struct		s_main_page
 
 typedef enum		e_page_type
 {
-	E_TINY,
-	E_SMALL,
-	E_LARGE
+	P_TINY,
+	P_SMALL,
+	P_LARGE
 }					t_page_type;
 
 typedef struct		s_page
@@ -78,22 +74,22 @@ typedef struct		s_block
 }					t_block;
 
 /* GENERAL--------------------------------------------------------------------*/
-void				*m_malloc(size_t size);
-void				m_free(void *ptr);
+void		*alloc_memory(const size_t page_size);
+t_block		*block_validation(t_page *page, void *ptr);
+t_page		*page_validation(void *ptr);
 
-void				*alloc_memory(const size_t page_size);
-size_t				area_size_align(size_t area_size);
 /* PAGE-----------------------------------------------------------------------*/
-t_main_page			*main_page_get(void);
-void				main_page_update(t_page *page);
-t_page				*page_get_available(const size_t block_size);
-t_page				*page_create(const size_t size);
+t_main_page	*main_page_get(void);
+void		main_page_update(t_page *page);
+t_page		*page_get_available(const size_t block_size);
+t_page		*page_create(const size_t size);
 
 /* BLOCK----------------------------------------------------------------------*/
-t_block				*block_get_available(const t_page *page, const size_t area_size);
-t_block				*block_add(void *page, const size_t area_size);
+t_block		*block_get_available(t_page *page, const size_t area_size);
+void		block_reserve(t_page *page, t_block *block, const size_t area_size);
+t_block		*block_place(void *page, const size_t area_size);
 
 /* DEBUG----------------------------------------------------------------------*/
-void 				show_alloc_mem(void);
+void		show_alloc_mem(void);
 
 # endif

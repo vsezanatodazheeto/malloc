@@ -20,7 +20,7 @@ void	*alloc_memory(const size_t page_size)
 // call malloc
 // fill by zero the memory area
 
-void	*m_calloc(size_t nmemb, size_t memb_size)
+void	*calloc(size_t nmemb, size_t memb_size)
 {
 	void	*area;
 	size_t	size;
@@ -31,7 +31,7 @@ void	*m_calloc(size_t nmemb, size_t memb_size)
 		size = nmemb * memb_size;
 		if (size / memb_size != nmemb)
 			dprintf(2, "Error: overflow occurred, size is too big\n");
-		else if ((area = m_malloc(size)))
+		else if ((area = malloc(size)))
 			memset(area, 0, size);
 	}
 	return (area);
@@ -42,7 +42,7 @@ void	*m_calloc(size_t nmemb, size_t memb_size)
 // get the current or create a page of the required type
 // looking for a available block
 
-void *m_malloc(size_t area_size)
+void	*malloc(size_t area_size)
 {
 	t_page *page;
 	t_block	*block;
@@ -60,34 +60,39 @@ void *m_malloc(size_t area_size)
 	return (NULL);
 }
 
-// realloc() меняет размер блока памяти, на который указывает ptr, на размер, равный size байтов.
-// Содержание будет неизменным в пределах наименьшего из старых и новых размеров,
-// а новая распределенная память будет неинициализирована.
-// Если ptr равно NULL, то данный вызов эквивалентен malloc(size);
-// если размер равен нулю, то данный вызов эквивалентен free(ptr).
-// Если только ptr не равен NULL, он, по-видимому, возвращен более ранним вызовом malloc(), calloc() или realloc().  
+// realloc:
+// if ptr doest'n exist, calls malloc
+// if ptr exist and size is 0, calls free
+// looking for allocated block, changes to area_size, do reallocate of data if needed
 
-// realloc() возвращает указатель на память, которая должным образом повторно
-// распределена для каждого типа переменных и может отличаться от ptr,
-// или возвращает NULL, если запрос завершился с ошибкой.
-// Если size был равен нулю, то возвращается либо NULL, либо указатель, который может быть передан free().
-// Если realloc() не выполнена, то блок памяти остается нетронутым: он не "очищается" и не перемещается.  
+void	*realloc(void *ptr, size_t area_size)
+{
+	t_page	*page;
+	t_block *block, *block_new;
 
-
-
-
-
-
-
-
-
-
-// size_t	area_size_align(size_t area_size)
-// {
-// 	if (((((area_size - 1) / BITW) * BITW) + BITW) < area_size)
-// 	{
-// 		dprintf(2, "Error: overflow occured in [%s]\n", __func__);
-// 		return (0);
-// 	}
-// 	return ((((area_size - 1) / BITW) * BITW) + BITW);
-// }
+	if (!ptr)
+		return (malloc(area_size));
+	else if (!area_size)
+		free(ptr);
+	if ((page = page_validation(ptr)))
+	{
+		if ((block = block_validation(page, ptr)))
+		{
+			if (area_size > block->size)
+			{
+				if ((block_new = malloc(area_size)))
+				{
+					memcpy(block_new, BLOCK_LAST_ADDR(block, 0), block->size);
+					free((BLOCK_LAST_ADDR(block, 0)));
+					return (BLOCK_LAST_ADDR(block_new, 0));
+				}
+			}
+			else
+			{
+				block_reserve(page, block, area_size);
+				return (ptr);
+			}
+		}
+	}
+	return (NULL);
+}

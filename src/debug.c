@@ -1,64 +1,64 @@
 #include "../include/malloc.h"
 
-#define PR_TINY "TINY"
-#define PR_SMALL "SMALL"
-#define PR_LARGE "LARGE"
+#define PR_TINY "TINY:\n"
+#define PR_SMALL "SMALL:\n"
+#define PR_LARGE "LARGE:\n"
+#define HEADER_1 "PAGE META      | INDEX   | BLOCK META     | BLOCK          | AVAIL | SIZE\n"
+#define HEADER_2 "---------------|---------|----------------|----------------|-------|------------\n"
 
 static void	dbg_count_blocks_in_page(const t_page *page)
 {
-	t_block *block;
-	int flag = 0, i = 1;
+	t_block	*block;
+	size_t	i = 1;
 
-	for (block = page->block_head; block; block = block->next)
+	for (block = page->block_head; block && block->magic_num == MAGIC_N ; block = block->next, i++)
 	{
-		if (page->type != E_LARGE && !flag)
+		if (page->type != P_LARGE)
 		{
-			printf("%-14p | ", (t_v)page);
-			flag = 1;
+			if (i > 1)
+				printf("%-14c | ", ' ');
+			printf("%-7zu | ", i);
 		}
-		else if (page->type == E_LARGE)
-			printf("%-14p | ", (t_v)page);
-		else
-			printf("%-14c | ", ' ');
-		printf("%-7d | ", i++);
 		printf("%-14p | ", (t_v)block);
 		printf("%-14p | ", (t_v)BLOCK_LAST_ADDR(block, 0));
-		printf("%-5d | ", block->avail);
+		printf("%-5s | ", block->avail ? "AV" : "0");
 		printf("%zu\n", block->size);
 	}
 }
 
-static void show_alloc_mem_extra(const t_page *page)
+static void	show_alloc_mem_extra(const t_page *page)
 {
-	int flag = 0;
+	int	flag = 0;
 
 	switch (page->type)
 	{
-	case E_TINY:
-		printf("\n%s:\n", PR_TINY);
+	case P_TINY :
+		printf(PR_TINY);
 		break;
-	case E_SMALL:
-		printf("\n%s:\n", PR_SMALL);
+	case P_SMALL :
+		printf(PR_SMALL);
 		break;
-	case E_LARGE:
-		printf("\n%s:\n", PR_LARGE);
+	case P_LARGE :
+		printf(PR_LARGE);
 		break;
 	}
-	for (int i = 1; page; ++i, page = page->next)
+	for (size_t i = 1; page; ++i, page = page->next)
 	{
-		if (page->block_last && flag == 0)
+		if (page->block_head && flag == 0 && (flag = 1))
 		{
-			flag = 1;
-			printf("PAGE META      | INDEX   | BLOCK META     | BLOCK          | AVAIL | SIZE\n");
-			printf("---------------|---------|----------------|----------------|-------|------------\n");
+			printf(HEADER_1);
+			printf(HEADER_2);
 		}
+		printf("%-14p | ", (t_v)page);
+		if (page->type == P_LARGE)
+			printf("%-7zu | ", i);
 		dbg_count_blocks_in_page(page);
 	}
 }
 
-void show_alloc_mem(void)
+void	show_alloc_mem(void)
 {
-	t_main_page *main_page;
+	t_main_page	*main_page;
 
 	main_page = main_page_get();
 	if (main_page->tiny_head)

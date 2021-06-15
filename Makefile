@@ -5,8 +5,7 @@ ifeq ($(HOSTTYPE = ), )
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-VERSION = 1
-NAME = libft_malloc_$(HOSTTYPE).so.$(VERSION)
+NAME = libft_malloc_$(HOSTTYPE).so
 LIB_NAME = libft_malloc.so
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic -g
@@ -28,13 +27,14 @@ OBJ := $(patsubst $(D_SRC)%.c, $(D_OBJ)%.o, $(SRC))
 #-------------------------------------------------------------------------------
 # @echo $(FILES)
 
+# gcc hello.c -o hello -lhello -L.
 all: $(NAME)
 
-# gcc -g -shared -Wl,-soname,libhello.so.0 -o libhello.so.0.0 libhello.o -lc
-# @echo $(NAME)
+# $(CC) -shared -o $(NAME) $(OBJ)
+# @$(CC) $(CFLAGS) -shared -Wl,-soname,$(NAME) -o $(LIB_NAME) $(OBJ) -lc
 
 $(NAME): $(D_OBJ) $(OBJ) Makefile
-	@$(CC) $(CFLAGS) -shared -Wl,-soname,$(NAME) -o $(LIB_NAME) $(OBJ) -lc
+	@$(CC) $(CFLAGS) -shared -o $(NAME) $(OBJ) -lc
 	@ln -sf $(NAME) $(LIB_NAME)
 	@echo "--------------------------------------"
 	@echo "$(NAME) compiled"
@@ -48,7 +48,7 @@ $(D_OBJ)%.o: $(D_SRC)%.c $(H)
 	@$(CC) $(CFLAGS) -fPIC -I $(D_H) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJ)
+	@rm -rf $(D_OBJ)
 
 fclean: clean
 	@rm -rf $(NAME)

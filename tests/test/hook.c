@@ -9,7 +9,7 @@
 
 static void* (*libc_malloc) (size_t)         = NULL;
 // static void* (*libc_calloc) (size_t, size_t) = NULL;
-// static void* (*libc_realloc)(void *, size_t) = NULL;
+// static void* (*libcrealloc)(void *, size_t) = NULL;
 // static void  (*libc_free)   (void *)         = NULL;
 static void* (*libc_mmap)(void *, size_t, int, int, int, off_t) = NULL;
 // static void* (*libc_mmap2)(void *, size_t, int, int, int, off_t) = NULL;
@@ -158,7 +158,7 @@ void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
 // }
 
 
-// static void account_realloc(void *p, void *ptr, size_t size)
+// static void accountrealloc(void *p, void *ptr, size_t size)
 // {
 // 	// Do not account itself
 // 	no_hook = 1;
@@ -281,21 +281,21 @@ void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
 // {
 // 	void *p = NULL;
 
-// 	if (libc_realloc == NULL)
-// 		SAVE_LIBC_FUNC(libc_realloc, "realloc");
+// 	if (libcrealloc == NULL)
+// 		SAVE_LIBC_FUNC(libcrealloc, "realloc");
 
 // 	init_env();
 
 // 	// TODO: CHECK new heap size *before* allowing realloc
 // 	if (mem_allocated <= mem_threshold) {
-// 		p = libc_realloc(ptr, size);
+// 		p = libcrealloc(ptr, size);
 // 	} else {
 // 		errno = ENOMEM;
 // 		return NULL;
 // 	}
 
 // 	if (!no_hook)
-// 		account_realloc(p, ptr, size);
+// 		accountrealloc(p, ptr, size);
 
 // 	return p;
 // }

@@ -1,23 +1,24 @@
 #include "../include/malloc.h"
 
-// ЭТУ ВОЗМОЖНО ТОЖЕ
-t_block	*block_add(void *area, const size_t area_size)
+t_block	*block_place(void *area, const size_t area_size)
 {
-	t_block	*block = (t_block *)area;
+	t_block	*block;
 
+	block = area;
 	*block = (t_block){.magic_num = MAGIC_N, .size = area_size, .avail = AVAILABLE};
 	return (block);
 }
 
 // if block added, need to update page->block_last, returns 1
-static int	block_reserve_possible(t_block *block, const size_t area_size, const size_t rest_size)
+static int	block_check_rest_size(t_block *block, const size_t area_size, const size_t rest_size)
 {
-	t_block *block_possible;
+	t_block	*block_possible;
 
 	if (rest_size > STRUCT_BLOCK_SIZE)
 	{
-		block_possible = block_add(BLOCK_LAST_ADDR(block, area_size), rest_size - STRUCT_BLOCK_SIZE);
+		block_possible = block_place(BLOCK_LAST_ADDR(block, area_size), rest_size - STRUCT_BLOCK_SIZE);
 		block_possible->prev = block;
+		block_possible->next = block->next;
 		block->next = block_possible;
 		return (1);
 	}
@@ -35,14 +36,10 @@ void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 {
 	size_t	rest_size;
 
-	page->block_unvail_qt++;
+	rest_size = BLOCK_LAST_ADDR(block, block->size) - BLOCK_LAST_ADDR(block, area_size);
 	block->avail = UNAVAILABLE;
 	block->size = area_size;
-	if (block->next)
-		rest_size = (t_ch)block->next - BLOCK_LAST_ADDR(block, area_size);
-	else
-		rest_size = PAGE_LAST_ADDR(page) - BLOCK_LAST_ADDR(block, area_size);
-	if (block_reserve_possible(block, area_size, rest_size))
+	if (block_check_rest_size(block, area_size, rest_size))
 	{
 		if (page->block_last < block->next)
 			page->block_last = block->next;
@@ -53,7 +50,7 @@ void	block_reserve(t_page *page, t_block *block, const size_t area_size)
 // look for a free block on pages, check for data overwriting (magic_num)
 // if the pages are over, then create
 
-t_block	*block_get_available(const t_page *page, const size_t area_size)
+t_block	*block_get_available(t_page *page, const size_t area_size)
 {
 	t_block	*block;
 
@@ -61,14 +58,15 @@ t_block	*block_get_available(const t_page *page, const size_t area_size)
 		return (NULL);
 	for (block = page->block_head; block; block = block->next)
 	{
-		if (block->magic_num != MAGIC_N) // сега
+		if (block->magic_num != MAGIC_N)
 		{
-			dprintf(2, "Error: data overwrite detected at [%p]\n", (t_v)block);
+			dprintf(2, "Error: at %p data overwrite detected\n", (t_v)block);
 			return (NULL);
 		}
 		else if (block->avail && block->size >= area_size)
 		{
-			block_reserve((t_page *)page, block, area_size);
+			block_reserve(page, block, area_size);
+			page->block_unvail_qt++;
 			return (block);
 		}
 	}

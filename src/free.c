@@ -33,19 +33,18 @@ static void	dealloc_memory(t_page *page)
 	main_page = main_page_get();
 	switch (page->type)
 	{
-	case E_TINY:
+	case P_TINY :
 		dealloc_memory_extra(&main_page->tiny_head, &main_page->tiny_last, page);
 		break;
-	case E_SMALL:
+	case P_SMALL :
 		dealloc_memory_extra(&main_page->small_head, &main_page->small_last, page);
 		break;
-	case E_LARGE:
+	case P_LARGE :
 		dealloc_memory_extra(&main_page->large_head, &main_page->large_last, page);
 		break;
 	}
 }
 
-// разобрать эту функцию
 static void	free_defragmentation(t_block *block)
 {
 	t_block	*temp;
@@ -67,7 +66,7 @@ static void	free_defragmentation(t_block *block)
 	temp->size = BLOCK_LAST_ADDR(block, block->size) - BLOCK_LAST_ADDR(temp, 0);
 }
 
-static t_block	*free_block_validation(t_page *page, void *ptr)
+t_block	*block_validation(t_page *page, void *ptr)
 {
 	t_block		*block;
 
@@ -81,22 +80,15 @@ static t_block	*free_block_validation(t_page *page, void *ptr)
 		if (block == BLOCK_FIRST_ADDR(ptr))
 			break ;
 	}
-	if (!block)
+	if (!block || block->avail)
 	{
-		dprintf(2, "Error: invalid free pointer!\n");
+		dprintf(2, "Error: %p the pointer being freed was not allocated!\n", ptr);
 		return (NULL);
 	}
-	if (block->avail)
-	{
-		dprintf(2, "Error: double free detected!\n");
-		return (NULL);
-	}
-	if (block->next && block->next->magic_num != MAGIC_N)
-		dprintf(2, "Error: data overwrite detected!\n");
 	return (block);
 }
 
-static t_page	*free_page_find(t_page *page, void *ptr)
+static t_page	*page_find(t_page *page, void *ptr)
 {
 	for (; page; page = page->next)
 	{
@@ -106,38 +98,41 @@ static t_page	*free_page_find(t_page *page, void *ptr)
 	return (page);
 }
 
-static t_page	*free_page_validation(void *ptr)
+t_page	*page_validation(void *ptr)
 {
 	t_main_page	*main_page;
 	t_page		*page;
 
 	main_page = main_page_get();
-	if (!(page = free_page_find(main_page->tiny_head, ptr)))
+	if (!(page = page_find(main_page->tiny_head, ptr)))
 	{
-		if (!(page = free_page_find(main_page->small_head, ptr)))
+		if (!(page = page_find(main_page->small_head, ptr)))
 		{
-			if (!(page = free_page_find(main_page->large_head, ptr)))
-				dprintf(2, "Error: invalid free pointer! in %s\n", __func__);
+			if (!(page = page_find(main_page->large_head, ptr)))
+				dprintf(2, "Error: invalid pointer!\n");
 		}
 	}
 	return (page);
 }
 
-void	m_free(void *ptr)
+void	free(void *ptr)
 {
 	t_page	*page;
 	t_block	*block;
 
-	if (!ptr)
-		return ;
-	if (!(page = free_page_validation(ptr)))
-		return ;
-	if (!(block = free_block_validation(page, ptr)))
-		return ;
-	block->avail = AVAILABLE;
-	page->block_unvail_qt--;
-	if (page->block_unvail_qt < 1)
-		dealloc_memory(page);
-	else
-		free_defragmentation(block);
+	if (ptr)
+	{
+		if ((page = page_validation(ptr)))
+		{
+			if ((block = block_validation(page, ptr)))
+			{
+				block->avail = AVAILABLE;
+				page->block_unvail_qt--;
+				if (page->block_unvail_qt < 1)
+					dealloc_memory(page);
+				else
+					free_defragmentation(block);
+			}
+		}
+	}
 }
