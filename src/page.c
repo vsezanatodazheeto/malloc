@@ -1,4 +1,4 @@
-#include "../include/malloc.h"
+#include "malloc.h"
 
 static t_page_type	page_ident_type(const size_t area_size)
 {
@@ -14,7 +14,7 @@ static void	page_init(t_page *page, const size_t page_size, const size_t block_s
 	memset(page, 0, STRUCT_PAGE_SIZE);
 	page->type = page_ident_type(block_size);
 	page->size = page_size;
-	page->block_head = block_place(PAGE_UNUSED_ADDR(page), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
+	page->block_head = block_place(PAGE_JUMP(page, 0), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
 }
 
 // page_ident_size:
@@ -60,9 +60,10 @@ t_page	*page_create(const size_t block_size)
 
 t_page	*page_get_available(const size_t area_size)
 {
-	t_main_page	*main_page = main_page_get();
+	t_main_page	*main_page;
 	t_page		*page;
 
+	main_page = main_page_get();
 	switch (page_ident_type(area_size))
 	{
 	case P_TINY:

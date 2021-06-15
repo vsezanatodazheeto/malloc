@@ -1,4 +1,4 @@
-#include "../include/malloc.h"
+#include "malloc.h"
 
 #define PR_TINY "TINY:\n"
 #define PR_SMALL "SMALL:\n"
@@ -20,7 +20,7 @@ static void	dbg_count_blocks_in_page(const t_page *page)
 			printf("%-7zu | ", i);
 		}
 		printf("%-14p | ", (t_v)block);
-		printf("%-14p | ", (t_v)BLOCK_LAST_ADDR(block, 0));
+		printf("%-14p | ", (t_v)BLOCK_JUMP(block, 0));
 		printf("%-5s | ", block->avail ? "AV" : "0");
 		printf("%zu\n", block->size);
 	}

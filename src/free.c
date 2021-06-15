@@ -1,4 +1,4 @@
-#include "../include/malloc.h"
+#include "malloc.h"
 
 static void	dealloc_memory_extra(t_page **head, t_page **last, t_page *page)
 {
@@ -63,7 +63,7 @@ static void	free_defragmentation(t_block *block)
 	if (block->next)
 		block->next->prev = temp;
 	temp->next = block->next;
-	temp->size = BLOCK_LAST_ADDR(block, block->size) - BLOCK_LAST_ADDR(temp, 0);
+	temp->size = BLOCK_JUMP(block, block->size) - BLOCK_JUMP(temp, 0);
 }
 
 t_block	*block_validation(t_page *page, void *ptr)
@@ -74,15 +74,15 @@ t_block	*block_validation(t_page *page, void *ptr)
 	{
 		if (block->magic_num != MAGIC_N)
 		{
-			dprintf(2, "Error: data overwrite detected!\n");
+			error_malloc(block, E_DATA);
 			return (NULL);
 		}
-		if (block == BLOCK_FIRST_ADDR(ptr))
+		if (block == BLOCK_META(ptr))
 			break ;
 	}
 	if (!block || block->avail)
 	{
-		dprintf(2, "Error: %p the pointer being freed was not allocated!\n", ptr);
+		error_malloc(ptr, E_PTR);
 		return (NULL);
 	}
 	return (block);
@@ -92,7 +92,7 @@ static t_page	*page_find(t_page *page, void *ptr)
 {
 	for (; page; page = page->next)
 	{
-		if (ptr > (t_v)page && ptr < (t_v)PAGE_LAST_ADDR(page))
+		if (ptr > (t_v)page && ptr < (t_v)PAGE_JUMP(page, page->size - STRUCT_PAGE_SIZE))
 			break ;
 	}
 	return (page);
@@ -109,11 +109,17 @@ t_page	*page_validation(void *ptr)
 		if (!(page = page_find(main_page->small_head, ptr)))
 		{
 			if (!(page = page_find(main_page->large_head, ptr)))
-				dprintf(2, "Error: invalid pointer!\n");
+				error_malloc(ptr, E_PTR);
 		}
 	}
 	return (page);
 }
+
+// free:
+// check if ptr exists on pages
+// check if ptr is a part of real block with meta data
+// sets ptr to available
+// 'defragmentation'
 
 void	free(void *ptr)
 {

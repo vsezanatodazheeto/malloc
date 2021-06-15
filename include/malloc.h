@@ -12,29 +12,30 @@
 # include <stdio.h>
 # include <string.h>
 
+# define E_PTR 				"the pointer being freed was not allocated!"
+# define E_DATA				"data overwrite detected!"
+# define E_SIZE				"overflow occurred, size is too big!"
+
 // 1432005180
-// 0101 0101 0101 1010 1010 1010 0011 1100
-# define MAGIC_N					0x555AAA3C
-# define PAGE_TINY_SIZE				(16 * getpagesize())
-# define BLOCK_TINY_LIMIT			1024
-# define PAGE_SMALL_SIZE			(128 * getpagesize())
-# define BLOCK_SMALL_LIMIT			8192
+# define MAGIC_N			0x555AAA3C
 
-# define STRUCT_MAIN_PAGE_SIZE		(size_t)(sizeof(t_main_page))
-# define STRUCT_PAGE_SIZE			(size_t)(sizeof(t_page))
-# define STRUCT_BLOCK_SIZE			(size_t)(sizeof(t_block))
+# define PAGE_TINY_SIZE		(16 * getpagesize())
+# define BLOCK_TINY_LIMIT	1024
+# define PAGE_SMALL_SIZE	(128 * getpagesize())
+# define BLOCK_SMALL_LIMIT	8192
 
-typedef void						*t_v;
-typedef char						*t_ch;
+# define STRUCT_PAGE_SIZE	(size_t)(sizeof(t_page))
+# define STRUCT_BLOCK_SIZE	(size_t)(sizeof(t_block))
 
-# define PAGE_UNUSED_ADDR(p)		((t_v)((t_ch)(p) + STRUCT_PAGE_SIZE))
+typedef void				*t_v;
+typedef char				*t_ch;
 
-# define PAGE_LAST_ADDR(p)			((t_ch)p + p->size)
-# define BLOCK_LAST_ADDR(b, a)		((t_ch)b + STRUCT_BLOCK_SIZE + a)
-# define BLOCK_FIRST_ADDR(b)		((t_block *)((t_ch)b - STRUCT_BLOCK_SIZE))
+# define PAGE_JUMP(p, s)	((t_ch)p + STRUCT_PAGE_SIZE + s)
+# define BLOCK_JUMP(b, s)	((t_ch)b + STRUCT_BLOCK_SIZE + s)
+# define BLOCK_META(b)		((t_block *)((t_ch)b - STRUCT_BLOCK_SIZE))
 
-# define AVAILABLE					1
-# define UNAVAILABLE				0
+# define AVAILABLE			1
+# define UNAVAILABLE		0
 
 typedef struct		s_main_page
 {
@@ -72,26 +73,26 @@ typedef struct		s_block
 	struct s_block	*next;
 }					t_block;
 
-/* GENERAL--------------------------------------------------------------------*/
 void		*malloc(size_t area_size);
-void		free(void *ptr);
+void		*calloc(size_t nmemb, size_t memb_size);
 void		*realloc(void *ptr, size_t area_size);
-void		*alloc_memory(const size_t page_size);
-t_block		*block_validation(t_page *page, void *ptr);
-t_page		*page_validation(void *ptr);
+void		free(void *ptr);
 
-/* PAGE-----------------------------------------------------------------------*/
+void		*alloc_memory(const size_t page_size);
+
+t_page		*page_validation(void *ptr);
+t_block		*block_validation(t_page *page, void *ptr);
+
 t_main_page	*main_page_get(void);
 void		main_page_update(t_page *page);
-t_page		*page_get_available(const size_t block_size);
-t_page		*page_create(const size_t size);
+t_page		*page_get_available(const size_t area_size);
+t_page		*page_create(const size_t block_size);
 
-/* BLOCK----------------------------------------------------------------------*/
 t_block		*block_get_available(t_page *page, const size_t area_size);
-void		block_reserve(t_page *page, t_block *block, const size_t area_size);
+void		block_reserve(t_block *block, const size_t area_size);
 t_block		*block_place(void *page, const size_t area_size);
 
-/* DEBUG----------------------------------------------------------------------*/
 void		show_alloc_mem(void);
+void		error_malloc(void *ptr, char *msg);
 
 # endif

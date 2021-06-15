@@ -1,4 +1,4 @@
-#include "../include/malloc.h"
+#include "malloc.h"
 
 static void	main_page_update_extra(t_page **head, t_page **last, t_page *new)
 {

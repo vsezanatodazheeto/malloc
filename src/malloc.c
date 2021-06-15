@@ -1,4 +1,12 @@
-#include "../include/malloc.h"
+#include "malloc.h"
+
+void	error_malloc(void *ptr, char *msg)
+{
+	if (ptr && msg)
+		dprintf(2, "Error at: %p %s\n", ptr, msg);
+	else if (!ptr && msg)
+		dprintf(2, "Error: %s\n", msg);
+}
 
 void	*alloc_memory(const size_t page_size)
 {
@@ -30,7 +38,7 @@ void	*calloc(size_t nmemb, size_t memb_size)
 	{
 		size = nmemb * memb_size;
 		if (size / memb_size != nmemb)
-			dprintf(2, "Error: overflow occurred, size is too big\n");
+			error_malloc(NULL, E_SIZE);
 		else if ((area = malloc(size)))
 			memset(area, 0, size);
 	}
@@ -48,13 +56,13 @@ void	*malloc(size_t area_size)
 	t_block	*block;
 
 	if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
-		dprintf(2, "Error: overflow occurred, size is too big\n");
+		error_malloc(NULL, E_SIZE);
 	else
 	{
 		if ((page = page_get_available(area_size)))
 		{
 			if ((block = block_get_available(page, area_size)))
-				return ((t_v)BLOCK_LAST_ADDR(block, 0));
+				return ((t_v)BLOCK_JUMP(block, 0));
 		}
 	}
 	return (NULL);
@@ -82,14 +90,14 @@ void	*realloc(void *ptr, size_t area_size)
 			{
 				if ((block_new = malloc(area_size)))
 				{
-					memcpy(block_new, BLOCK_LAST_ADDR(block, 0), block->size);
-					free((BLOCK_LAST_ADDR(block, 0)));
-					return (BLOCK_LAST_ADDR(block_new, 0));
+					memcpy(block_new, BLOCK_JUMP(block, 0), block->size);
+					free((BLOCK_JUMP(block, 0)));
+					return (BLOCK_JUMP(block_new, 0));
 				}
 			}
 			else
 			{
-				block_reserve(page, block, area_size);
+				block_reserve(block, area_size);
 				return (ptr);
 			}
 		}

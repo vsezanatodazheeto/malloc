@@ -43,7 +43,7 @@ $(D_OBJ):
 
 $(D_OBJ)%.o: $(D_SRC)%.c $(H)
 	@echo $<
-	@$(CC) $(CFLAGS) -fPIC -I $(D_H) -c $< -o $@ -g
+	@$(CC) $(CFLAGS) -fPIC -I$(D_H) -c $< -o $@ -g
 
 clean:
 	@rm -rf $(D_OBJ)
