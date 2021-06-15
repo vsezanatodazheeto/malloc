@@ -1,16 +1,17 @@
 #ifndef MALLOC_H
 # define MALLOC_H
 
+#include "ft_printf.h"
+
 # include <sys/time.h>
 # include <sys/resource.h>
 # include <sys/mman.h>
 # include <stdint.h>
-# include <unistd.h>
+// # include <unistd.h>
 
-# include <stdlib.h>
-# include <errno.h>
-# include <stdio.h>
-# include <string.h>
+// # include <stdlib.h>
+// # include <errno.h>
+// # include <string.h>
 
 # define E_PTR 				"the pointer being freed was not allocated!"
 # define E_DATA				"data overwrite detected!"
@@ -94,5 +95,7 @@ t_block		*block_place(void *page, const size_t area_size);
 
 void		show_alloc_mem(void);
 void		error_malloc(void *ptr, char *msg);
+void		*ft_memset(void *s, int c, size_t len);
+void		*ft_memcpy(void *dest, const void *source, size_t size);
 
 # endif

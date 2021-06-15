@@ -1,4 +1,5 @@
 #include "malloc.h"
+#include <stdio.h>
 
 #define PR_TINY "TINY:\n"
 #define PR_SMALL "SMALL:\n"

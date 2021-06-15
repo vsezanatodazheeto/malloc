@@ -3,9 +3,9 @@
 void	error_malloc(void *ptr, char *msg)
 {
 	if (ptr && msg)
-		dprintf(2, "Error at: %p %s\n", ptr, msg);
+		ft_dprintf(2, "Error at: %p %s\n", ptr, msg);
 	else if (!ptr && msg)
-		dprintf(2, "Error: %s\n", msg);
+		ft_dprintf(2, "Error: %s\n", msg);
 }
 
 void	*alloc_memory(const size_t page_size)
@@ -40,7 +40,7 @@ void	*calloc(size_t nmemb, size_t memb_size)
 		if (size / memb_size != nmemb)
 			error_malloc(NULL, E_SIZE);
 		else if ((area = malloc(size)))
-			memset(area, 0, size);
+			ft_memset(area, 0, size);
 	}
 	return (area);
 }
@@ -90,7 +90,7 @@ void	*realloc(void *ptr, size_t area_size)
 			{
 				if ((block_new = malloc(area_size)))
 				{
-					memcpy(block_new, BLOCK_JUMP(block, 0), block->size);
+					ft_memcpy(block_new, BLOCK_JUMP(block, 0), block->size);
 					free((BLOCK_JUMP(block, 0)));
 					return (BLOCK_JUMP(block_new, 0));
 				}

@@ -11,7 +11,7 @@ static t_page_type	page_ident_type(const size_t area_size)
 
 static void	page_init(t_page *page, const size_t page_size, const size_t block_size)
 {
-	memset(page, 0, STRUCT_PAGE_SIZE);
+	ft_memset(page, 0, STRUCT_PAGE_SIZE);
 	page->type = page_ident_type(block_size);
 	page->size = page_size;
 	page->block_head = block_place(PAGE_JUMP(page, 0), page_size - STRUCT_PAGE_SIZE - STRUCT_BLOCK_SIZE);
@@ -28,7 +28,7 @@ static size_t	page_ident_size(const size_t area_size)
 		return (PAGE_SMALL_SIZE);
 	else if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
 	{
-		dprintf(2, "Error: overflow occured in: %s\n", __func__);
+		error_malloc(NULL, E_SIZE);
 		return (0);
 	}
 	return (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE);
