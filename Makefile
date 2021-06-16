@@ -48,14 +48,11 @@ $(D_OBJ)%.o: $(D_SRC)%.c $(H)
 	@$(CC) $(CFLAGS) -fPIC -I$(D_H) -I$(LIB_H) -c $< -o $@ -g
 
 subsystem:
-	@$(MAKE) -sC $(LIB_DIR)
 
 clean:
 	@rm -rf $(D_OBJ)
-	@$(MAKE) -sC $(LIB_DIR) clean
 
 fclean: clean
 	@rm -rf $(NAME) $(NAME_BASE)
-	@$(MAKE) -sC $(LIB_DIR) fclean
 
 re: fclean all

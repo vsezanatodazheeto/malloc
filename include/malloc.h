@@ -1,8 +1,6 @@
 #ifndef MALLOC_H
 # define MALLOC_H
 
-#include "ft_printf.h"
-
 # include <sys/time.h>
 # include <sys/resource.h>
 # include <sys/mman.h>
