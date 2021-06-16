@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "malloc.h"
 
 #define QT 25
@@ -28,8 +30,8 @@ int main()
 	}
 
 	show_alloc_mem();
-
 	printf("\nЗаписываем в 3-й индекс больше, чем выделели, пытаемся аллоцировать новый блок после этого\n\n");
+	fflush(stdout);
 	memset(p[2], 'a', size * 2);
 	p[1] = malloc(size);
 
