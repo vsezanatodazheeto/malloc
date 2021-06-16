@@ -34,7 +34,7 @@ LIB_H = $(LIB_DIR)include/
 all: subsystem $(NAME)
 
 $(NAME): $(D_OBJ) $(OBJ) Makefile
-	@$(CC) $(CFLAGS) -l$(LIB_NAME) -L$(LIB_DIR) -shared -o $(NAME) $(OBJ) -lc -g
+	@$(CC) $(CFLAGS) -l$(LIB_NAME) -L$(LIB_DIR) -shared -o $(NAME) $(OBJ)
 	@echo "--------------------------------------"
 	@echo "$(NAME) compiled"
 	ln -sf $(NAME) $(NAME_BASE)
@@ -59,6 +59,3 @@ fclean: clean
 	@$(MAKE) -sC $(LIB_DIR) fclean
 
 re: fclean all
-
-# $(CC) -shared -o $(NAME) $(OBJ)
-# @$(CC) $(CFLAGS) -shared -Wl,-soname,$(NAME) -o $(LIB_NAME) $(OBJ) -lc
