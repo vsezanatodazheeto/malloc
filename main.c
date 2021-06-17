@@ -58,30 +58,41 @@ extern void write_char(char);
 void write_char(char ch)
 {
 	write(1, &ch, 1);
-
 }
 
-char hex_digit(int v) {
+char hex_digit(int v)
+{
     if (v >= 0 && v < 10)
-        return '0' + v;
+        return ('0' + v);
     else
-        return 'a' + v - 10; // <-- Here
+        return ('a' + v - 10);
 }
 
-void print_address_hex(void* p0) {
+void print_address_hex(void *p0)
+{
     int i;
     uintptr_t p = (uintptr_t)p0;
 
     write_char('0');
 	write_char('x');
-    for(i = (sizeof(p) << 3) - 4; i>=0; i -= 4) {
+    for (i = (sizeof(p) << 3); i >= 0; i -= 4)
         write_char(hex_digit((p >> i) & 0xf));
-    }
 }
 
 int main()
 {
-	void *p = malloc(100);
-	print_address_hex(p);
-	printf("\n%p\n", p);
+    void *p;
+    size_t size = 1;
+    for (int i = 0; i < 30; ++i)
+    {
+        p = malloc(size);
+	    print_address_hex(p);
+	    printf("\n%p\n", p);
+        printf("-----------------\n");
+        size = size + size;
+    }
+    // for (int i = sizeof(p); i >=0; i -= 4)
+        // printf("%lu\n", ((uintptr_t)p >> i) & 0xf);
+    // printf("%lu\n", sizeof(p) << 3);
+    // exit(0);
 }
