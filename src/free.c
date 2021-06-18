@@ -74,7 +74,7 @@ t_block	*block_validation(t_page *page, void *ptr)
 	{
 		if (block->magic_num != MAGIC_N)
 		{
-			error_malloc(block, E_DATA, sizeof(E_DATA));
+			error_malloc(block, E_DATA, sizeof(E_DATA) - 1);
 			return (NULL);
 		}
 		if (block == BLOCK_META(ptr))
@@ -82,7 +82,7 @@ t_block	*block_validation(t_page *page, void *ptr)
 	}
 	if (!block || block->avail)
 	{
-		error_malloc(ptr, E_PTR, sizeof(E_PTR));
+		error_malloc(ptr, E_PTR, sizeof(E_PTR) - 1);
 		return (NULL);
 	}
 	return (block);
@@ -109,7 +109,7 @@ t_page	*page_validation(void *ptr)
 		if (!(page = page_find(main_page->small_head, ptr)))
 		{
 			if (!(page = page_find(main_page->large_head, ptr)))
-				error_malloc(ptr, E_PTR, sizeof(E_PTR));
+				error_malloc(ptr, E_PTR, sizeof(E_PTR) - 1);
 		}
 	}
 	return (page);

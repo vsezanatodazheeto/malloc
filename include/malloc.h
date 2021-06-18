@@ -27,7 +27,7 @@ typedef char				*t_ch;
 # define AVAILABLE			1
 # define UNAVAILABLE		0
 
-typedef struct		s_main_page
+typedef struct s_main_page
 {
 	struct s_page	*tiny_head;
 	struct s_page	*tiny_last;
@@ -35,16 +35,16 @@ typedef struct		s_main_page
 	struct s_page	*small_last;
 	struct s_page	*large_head;
 	struct s_page	*large_last;
-}					t_main_page;
+}	t_main_page;
 
-typedef enum		e_page_type
+typedef enum e_page_type
 {
 	P_TINY,
 	P_SMALL,
 	P_LARGE
-}					t_page_type;
+}	t_page_type;
 
-typedef struct		s_page
+typedef struct s_page
 {
 	size_t			size;
 	size_t			block_unvail_qt;
@@ -52,16 +52,16 @@ typedef struct		s_page
 	struct s_page	*prev;
 	struct s_page	*next;
 	struct s_block	*block_head;
-}					t_page;
+}	t_page;
 
-typedef struct		s_block
+typedef struct s_block
 {
 	size_t			magic_num;
 	size_t			size;
 	int				avail;
 	struct s_block	*prev;
 	struct s_block	*next;
-}					t_block;
+}	t_block;
 
 void		*malloc(size_t area_size);
 void		*calloc(size_t nmemb, size_t memb_size);
@@ -87,4 +87,4 @@ void		error_malloc(void *ptr, char *msg, size_t msg_size);
 void		*ft_memset(void *s, int c, size_t len);
 void		*ft_memcpy(void *dest, const void *source, size_t size);
 
-# endif
+#endif

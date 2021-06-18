@@ -1,6 +1,5 @@
 .PHONY: subsystem clean fclean re
 
-HOSTTYPE =
 ifeq ($(HOSTTYPE = ), )
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
@@ -12,7 +11,7 @@ CFLAGS = -Wall -Wextra -Werror -pedantic -g
 
 #-------------------------------------------------------------------------------
 D_H = include/
-H = malloc.h
+H = malloc.h malloc_error.h
 H := $(addprefix $(D_H), $(H))
 
 #-------------------------------------------------------------------------------

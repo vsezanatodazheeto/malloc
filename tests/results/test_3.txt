@@ -6,103 +6,103 @@
 TINY:
 PAGE META      | INDEX   | BLOCK META     | BLOCK          | AVAIL | SIZE
 ---------------|---------|----------------|----------------|-------|------------
-0x10eda7000    | 1       | 0x10eda7030    | 0x10eda7058    | 0     | 1024
-               | 2       | 0x10eda7458    | 0x10eda7480    | 0     | 1024
-               | 3       | 0x10eda7880    | 0x10eda78a8    | 0     | 1024
-               | 4       | 0x10eda7ca8    | 0x10eda7cd0    | 0     | 1024
-               | 5       | 0x10eda80d0    | 0x10eda80f8    | 0     | 1024
-               | 6       | 0x10eda84f8    | 0x10eda8520    | 0     | 1024
-               | 7       | 0x10eda8920    | 0x10eda8948    | 0     | 1024
-               | 8       | 0x10eda8d48    | 0x10eda8d70    | 0     | 1024
-               | 9       | 0x10eda9170    | 0x10eda9198    | 0     | 1024
-               | 10      | 0x10eda9598    | 0x10eda95c0    | 0     | 1024
-               | 11      | 0x10eda99c0    | 0x10eda99e8    | 0     | 1024
-               | 12      | 0x10eda9de8    | 0x10eda9e10    | 0     | 1024
-               | 13      | 0x10edaa210    | 0x10edaa238    | 0     | 1024
-               | 14      | 0x10edaa638    | 0x10edaa660    | 0     | 1024
-               | 15      | 0x10edaaa60    | 0x10edaaa88    | 0     | 1024
-               | 16      | 0x10edaae88    | 0x10edaaeb0    | 0     | 1024
-               | 17      | 0x10edab2b0    | 0x10edab2d8    | 0     | 1024
-               | 18      | 0x10edab6d8    | 0x10edab700    | 0     | 1024
-               | 19      | 0x10edabb00    | 0x10edabb28    | 0     | 1024
-               | 20      | 0x10edabf28    | 0x10edabf50    | 0     | 1024
-               | 21      | 0x10edac350    | 0x10edac378    | 0     | 1024
-               | 22      | 0x10edac778    | 0x10edac7a0    | 0     | 1024
-               | 23      | 0x10edacba0    | 0x10edacbc8    | 0     | 1024
-               | 24      | 0x10edacfc8    | 0x10edacff0    | 0     | 1024
-               | 25      | 0x10edad3f0    | 0x10edad418    | 0     | 1024
-               | 26      | 0x10edad818    | 0x10edad840    | AV    | 38848
+0x10afe8000    | 1       | 0x10afe8030    | 0x10afe8058    | 0     | 1024
+               | 2       | 0x10afe8458    | 0x10afe8480    | 0     | 1024
+               | 3       | 0x10afe8880    | 0x10afe88a8    | 0     | 1024
+               | 4       | 0x10afe8ca8    | 0x10afe8cd0    | 0     | 1024
+               | 5       | 0x10afe90d0    | 0x10afe90f8    | 0     | 1024
+               | 6       | 0x10afe94f8    | 0x10afe9520    | 0     | 1024
+               | 7       | 0x10afe9920    | 0x10afe9948    | 0     | 1024
+               | 8       | 0x10afe9d48    | 0x10afe9d70    | 0     | 1024
+               | 9       | 0x10afea170    | 0x10afea198    | 0     | 1024
+               | 10      | 0x10afea598    | 0x10afea5c0    | 0     | 1024
+               | 11      | 0x10afea9c0    | 0x10afea9e8    | 0     | 1024
+               | 12      | 0x10afeade8    | 0x10afeae10    | 0     | 1024
+               | 13      | 0x10afeb210    | 0x10afeb238    | 0     | 1024
+               | 14      | 0x10afeb638    | 0x10afeb660    | 0     | 1024
+               | 15      | 0x10afeba60    | 0x10afeba88    | 0     | 1024
+               | 16      | 0x10afebe88    | 0x10afebeb0    | 0     | 1024
+               | 17      | 0x10afec2b0    | 0x10afec2d8    | 0     | 1024
+               | 18      | 0x10afec6d8    | 0x10afec700    | 0     | 1024
+               | 19      | 0x10afecb00    | 0x10afecb28    | 0     | 1024
+               | 20      | 0x10afecf28    | 0x10afecf50    | 0     | 1024
+               | 21      | 0x10afed350    | 0x10afed378    | 0     | 1024
+               | 22      | 0x10afed778    | 0x10afed7a0    | 0     | 1024
+               | 23      | 0x10afedba0    | 0x10afedbc8    | 0     | 1024
+               | 24      | 0x10afedfc8    | 0x10afedff0    | 0     | 1024
+               | 25      | 0x10afee3f0    | 0x10afee418    | 0     | 1024
+               | 26      | 0x10afee818    | 0x10afee840    | AV    | 38848
 
 Освобождаем каждый четный
 
 TINY:
 PAGE META      | INDEX   | BLOCK META     | BLOCK          | AVAIL | SIZE
 ---------------|---------|----------------|----------------|-------|------------
-0x10eda7000    | 1       | 0x10eda7030    | 0x10eda7058    | 0     | 1024
-               | 2       | 0x10eda7458    | 0x10eda7480    | AV    | 1024
-               | 3       | 0x10eda7880    | 0x10eda78a8    | 0     | 1024
-               | 4       | 0x10eda7ca8    | 0x10eda7cd0    | AV    | 1024
-               | 5       | 0x10eda80d0    | 0x10eda80f8    | 0     | 1024
-               | 6       | 0x10eda84f8    | 0x10eda8520    | AV    | 1024
-               | 7       | 0x10eda8920    | 0x10eda8948    | 0     | 1024
-               | 8       | 0x10eda8d48    | 0x10eda8d70    | AV    | 1024
-               | 9       | 0x10eda9170    | 0x10eda9198    | 0     | 1024
-               | 10      | 0x10eda9598    | 0x10eda95c0    | AV    | 1024
-               | 11      | 0x10eda99c0    | 0x10eda99e8    | 0     | 1024
-               | 12      | 0x10eda9de8    | 0x10eda9e10    | AV    | 1024
-               | 13      | 0x10edaa210    | 0x10edaa238    | 0     | 1024
-               | 14      | 0x10edaa638    | 0x10edaa660    | AV    | 1024
-               | 15      | 0x10edaaa60    | 0x10edaaa88    | 0     | 1024
-               | 16      | 0x10edaae88    | 0x10edaaeb0    | AV    | 1024
-               | 17      | 0x10edab2b0    | 0x10edab2d8    | 0     | 1024
-               | 18      | 0x10edab6d8    | 0x10edab700    | AV    | 1024
-               | 19      | 0x10edabb00    | 0x10edabb28    | 0     | 1024
-               | 20      | 0x10edabf28    | 0x10edabf50    | AV    | 1024
-               | 21      | 0x10edac350    | 0x10edac378    | 0     | 1024
-               | 22      | 0x10edac778    | 0x10edac7a0    | AV    | 1024
-               | 23      | 0x10edacba0    | 0x10edacbc8    | 0     | 1024
-               | 24      | 0x10edacfc8    | 0x10edacff0    | AV    | 1024
-               | 25      | 0x10edad3f0    | 0x10edad418    | 0     | 1024
-               | 26      | 0x10edad818    | 0x10edad840    | AV    | 38848
+0x10afe8000    | 1       | 0x10afe8030    | 0x10afe8058    | 0     | 1024
+               | 2       | 0x10afe8458    | 0x10afe8480    | AV    | 1024
+               | 3       | 0x10afe8880    | 0x10afe88a8    | 0     | 1024
+               | 4       | 0x10afe8ca8    | 0x10afe8cd0    | AV    | 1024
+               | 5       | 0x10afe90d0    | 0x10afe90f8    | 0     | 1024
+               | 6       | 0x10afe94f8    | 0x10afe9520    | AV    | 1024
+               | 7       | 0x10afe9920    | 0x10afe9948    | 0     | 1024
+               | 8       | 0x10afe9d48    | 0x10afe9d70    | AV    | 1024
+               | 9       | 0x10afea170    | 0x10afea198    | 0     | 1024
+               | 10      | 0x10afea598    | 0x10afea5c0    | AV    | 1024
+               | 11      | 0x10afea9c0    | 0x10afea9e8    | 0     | 1024
+               | 12      | 0x10afeade8    | 0x10afeae10    | AV    | 1024
+               | 13      | 0x10afeb210    | 0x10afeb238    | 0     | 1024
+               | 14      | 0x10afeb638    | 0x10afeb660    | AV    | 1024
+               | 15      | 0x10afeba60    | 0x10afeba88    | 0     | 1024
+               | 16      | 0x10afebe88    | 0x10afebeb0    | AV    | 1024
+               | 17      | 0x10afec2b0    | 0x10afec2d8    | 0     | 1024
+               | 18      | 0x10afec6d8    | 0x10afec700    | AV    | 1024
+               | 19      | 0x10afecb00    | 0x10afecb28    | 0     | 1024
+               | 20      | 0x10afecf28    | 0x10afecf50    | AV    | 1024
+               | 21      | 0x10afed350    | 0x10afed378    | 0     | 1024
+               | 22      | 0x10afed778    | 0x10afed7a0    | AV    | 1024
+               | 23      | 0x10afedba0    | 0x10afedbc8    | 0     | 1024
+               | 24      | 0x10afedfc8    | 0x10afedff0    | AV    | 1024
+               | 25      | 0x10afee3f0    | 0x10afee418    | 0     | 1024
+               | 26      | 0x10afee818    | 0x10afee840    | AV    | 38848
 
 Освобождаем под индексом #3 (1024 * 3 + (2 * 40 (два пустых мета блока)) == 3152 
 
 TINY:
 PAGE META      | INDEX   | BLOCK META     | BLOCK          | AVAIL | SIZE
 ---------------|---------|----------------|----------------|-------|------------
-0x10eda7000    | 1       | 0x10eda7030    | 0x10eda7058    | 0     | 1024
-               | 2       | 0x10eda7458    | 0x10eda7480    | AV    | 3152
-               | 3       | 0x10eda80d0    | 0x10eda80f8    | 0     | 1024
-               | 4       | 0x10eda84f8    | 0x10eda8520    | AV    | 1024
-               | 5       | 0x10eda8920    | 0x10eda8948    | 0     | 1024
-               | 6       | 0x10eda8d48    | 0x10eda8d70    | AV    | 1024
-               | 7       | 0x10eda9170    | 0x10eda9198    | 0     | 1024
-               | 8       | 0x10eda9598    | 0x10eda95c0    | AV    | 1024
-               | 9       | 0x10eda99c0    | 0x10eda99e8    | 0     | 1024
-               | 10      | 0x10eda9de8    | 0x10eda9e10    | AV    | 1024
-               | 11      | 0x10edaa210    | 0x10edaa238    | 0     | 1024
-               | 12      | 0x10edaa638    | 0x10edaa660    | AV    | 1024
-               | 13      | 0x10edaaa60    | 0x10edaaa88    | 0     | 1024
-               | 14      | 0x10edaae88    | 0x10edaaeb0    | AV    | 1024
-               | 15      | 0x10edab2b0    | 0x10edab2d8    | 0     | 1024
-               | 16      | 0x10edab6d8    | 0x10edab700    | AV    | 1024
-               | 17      | 0x10edabb00    | 0x10edabb28    | 0     | 1024
-               | 18      | 0x10edabf28    | 0x10edabf50    | AV    | 1024
-               | 19      | 0x10edac350    | 0x10edac378    | 0     | 1024
-               | 20      | 0x10edac778    | 0x10edac7a0    | AV    | 1024
-               | 21      | 0x10edacba0    | 0x10edacbc8    | 0     | 1024
-               | 22      | 0x10edacfc8    | 0x10edacff0    | AV    | 1024
-               | 23      | 0x10edad3f0    | 0x10edad418    | 0     | 1024
-               | 24      | 0x10edad818    | 0x10edad840    | AV    | 38848
+0x10afe8000    | 1       | 0x10afe8030    | 0x10afe8058    | 0     | 1024
+               | 2       | 0x10afe8458    | 0x10afe8480    | AV    | 3152
+               | 3       | 0x10afe90d0    | 0x10afe90f8    | 0     | 1024
+               | 4       | 0x10afe94f8    | 0x10afe9520    | AV    | 1024
+               | 5       | 0x10afe9920    | 0x10afe9948    | 0     | 1024
+               | 6       | 0x10afe9d48    | 0x10afe9d70    | AV    | 1024
+               | 7       | 0x10afea170    | 0x10afea198    | 0     | 1024
+               | 8       | 0x10afea598    | 0x10afea5c0    | AV    | 1024
+               | 9       | 0x10afea9c0    | 0x10afea9e8    | 0     | 1024
+               | 10      | 0x10afeade8    | 0x10afeae10    | AV    | 1024
+               | 11      | 0x10afeb210    | 0x10afeb238    | 0     | 1024
+               | 12      | 0x10afeb638    | 0x10afeb660    | AV    | 1024
+               | 13      | 0x10afeba60    | 0x10afeba88    | 0     | 1024
+               | 14      | 0x10afebe88    | 0x10afebeb0    | AV    | 1024
+               | 15      | 0x10afec2b0    | 0x10afec2d8    | 0     | 1024
+               | 16      | 0x10afec6d8    | 0x10afec700    | AV    | 1024
+               | 17      | 0x10afecb00    | 0x10afecb28    | 0     | 1024
+               | 18      | 0x10afecf28    | 0x10afecf50    | AV    | 1024
+               | 19      | 0x10afed350    | 0x10afed378    | 0     | 1024
+               | 20      | 0x10afed778    | 0x10afed7a0    | AV    | 1024
+               | 21      | 0x10afedba0    | 0x10afedbc8    | 0     | 1024
+               | 22      | 0x10afedfc8    | 0x10afedff0    | AV    | 1024
+               | 23      | 0x10afee3f0    | 0x10afee418    | 0     | 1024
+               | 24      | 0x10afee818    | 0x10afee840    | AV    | 38848
 
 Освобождаем все, кроме первого
 
 TINY:
 PAGE META      | INDEX   | BLOCK META     | BLOCK          | AVAIL | SIZE
 ---------------|---------|----------------|----------------|-------|------------
-0x10eda7000    | 1       | 0x10eda7030    | 0x10eda7058    | 0     | 1024
-               | 2       | 0x10eda7458    | 0x10eda7480    | AV    | 64384
+0x10afe8000    | 1       | 0x10afe8030    | 0x10afe8058    | 0     | 1024
+               | 2       | 0x10afe8458    | 0x10afe8480    | AV    | 64384
 
 Пробуем освободить неаллоцированный указатель
 
-Error at: 10eda7480 the pointer being freed was not allocated!
+Error at: 0x10afe8480 the pointer being freed was not allocated!

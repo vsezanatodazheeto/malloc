@@ -1,6 +1,4 @@
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "test.h"
 #include "malloc.h"
 
 #define QT 25
