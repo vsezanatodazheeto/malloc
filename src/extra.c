@@ -34,12 +34,7 @@ void	*ft_memcpy(void *dest, const void *source, size_t size)
 	return (dest);
 }
 
-void	write_char(char ch)
-{
-	write(1, &ch, 1);
-}
-
-char	hex_digit(int v)
+static char hex_digit(int v)
 {
     if (v >= 0 && v < 10)
         return ('0' + v);
@@ -47,13 +42,38 @@ char	hex_digit(int v)
         return ('a' + v - 10);
 }
 
-void	print_address_hex(void *p0)
+static void print_address_hex(void *p0)
 {
-    int i;
     uintptr_t p = (uintptr_t)p0;
+    int i, flag;
+    char ch;
 
-    write_char('0');
-	write_char('x');
-    for (i = (sizeof(p) << 3); i >= 0; i -=  4)
-        write_char(hex_digit((p >> i) & 0xf));
+    flag = 0;
+	write(2, (void *)('0'), 1);
+	write(2, (void *)('x'), 1);
+    for (i = (sizeof(p) << 3); i >= 0; i -= 4)
+    {
+        if (!(ch = hex_digit((p >> i) & 0xf)))
+            flag = 1;
+        if (flag)
+			write(2, &ch, 1);
+    }
+    if (!flag)
+		write(2, &ch, 1);
+}
+
+void	error_malloc(void *ptr, char *msg, size_t msg_size)
+{
+	if (ptr && msg)
+	{
+		write(2, E_ERR_AT, sizeof(E_ERR_AT));
+		print_address_hex(ptr);
+		write(2, msg, msg_size);
+	}
+	else if (!ptr && msg)
+	{
+		write(2, E_ERR, sizeof(E_ERR));
+		print_address_hex(ptr);
+		write(2, msg, msg_size);
+	}
 }

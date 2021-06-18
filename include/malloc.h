@@ -1,19 +1,10 @@
 #ifndef MALLOC_H
 # define MALLOC_H
 
-# include <sys/time.h>
-# include <sys/resource.h>
 # include <sys/mman.h>
 # include <stdint.h>
-// # include <unistd.h>
-
-// # include <stdlib.h>
-// # include <errno.h>
-// # include <string.h>
-
-# define E_PTR 				"the pointer being freed was not allocated!"
-# define E_DATA				"data overwrite detected!"
-# define E_SIZE				"overflow occurred, size is too big!"
+# include <unistd.h>
+# include "malloc_error.h"
 
 // 1432005180
 # define MAGIC_N			0x555AAA3C
@@ -92,7 +83,7 @@ void		block_reserve(t_block *block, const size_t area_size);
 t_block		*block_place(void *page, const size_t area_size);
 
 void		show_alloc_mem(void);
-void		error_malloc(void *ptr, char *msg);
+void		error_malloc(void *ptr, char *msg, size_t msg_size);
 void		*ft_memset(void *s, int c, size_t len);
 void		*ft_memcpy(void *dest, const void *source, size_t size);
 

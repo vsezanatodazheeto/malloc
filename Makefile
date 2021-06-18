@@ -25,16 +25,11 @@ D_OBJ = obj/
 OBJ := $(patsubst $(D_SRC)%.c, $(D_OBJ)%.o, $(SRC))
 
 #-------------------------------------------------------------------------------
-LIB_NAME = ft_printf
-LIB_DIR = libft_printf/
-LIB_H = $(LIB_DIR)include/
 
-#-------------------------------------------------------------------------------
-
-all: subsystem $(NAME)
+all: $(NAME)
 
 $(NAME): $(D_OBJ) $(OBJ) Makefile
-	@$(CC) $(CFLAGS) -l$(LIB_NAME) -L$(LIB_DIR) -shared -o $(NAME) $(OBJ)
+	@$(CC) $(CFLAGS) -shared -o $(NAME) $(OBJ)
 	@echo "--------------------------------------"
 	@echo "$(NAME) compiled"
 	ln -sf $(NAME) $(NAME_BASE)
@@ -45,9 +40,7 @@ $(D_OBJ):
 
 $(D_OBJ)%.o: $(D_SRC)%.c $(H)
 	@echo $<
-	@$(CC) $(CFLAGS) -fPIC -I$(D_H) -I$(LIB_H) -c $< -o $@ -g
-
-subsystem:
+	@$(CC) $(CFLAGS) -fPIC -I$(D_H) -c $< -o $@ -g
 
 clean:
 	@rm -rf $(D_OBJ)

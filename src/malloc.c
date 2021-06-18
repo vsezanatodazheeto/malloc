@@ -1,13 +1,5 @@
 #include "malloc.h"
 
-void	error_malloc(void *ptr, char *msg)
-{
-	if (ptr && msg)
-		ft_dprintf(2, "Error at: %p %s\n", ptr, msg);
-	else if (!ptr && msg)
-		ft_dprintf(2, "Error: %s\n", msg);
-}
-
 void	*alloc_memory(const size_t page_size)
 {
 	void	*data_memory;
@@ -38,7 +30,7 @@ void	*calloc(size_t nmemb, size_t memb_size)
 	{
 		size = nmemb * memb_size;
 		if (size / memb_size != nmemb)
-			error_malloc(NULL, E_SIZE);
+			error_malloc(NULL, E_SIZE, sizeof(E_SIZE));
 		else if ((area = malloc(size)))
 			ft_memset(area, 0, size);
 	}
@@ -56,7 +48,7 @@ void	*malloc(size_t area_size)
 	t_block	*block;
 
 	if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
-		error_malloc(NULL, E_SIZE);
+		error_malloc(NULL, E_SIZE, sizeof(E_SIZE));
 	else
 	{
 		if ((page = page_get_available(area_size)))

@@ -60,7 +60,7 @@ t_block	*block_get_available(t_page *page, const size_t area_size)
 	{
 		if (block->magic_num != MAGIC_N)
 		{
-			error_malloc(block, E_DATA);
+			error_malloc(block, E_DATA, sizeof(E_DATA));
 			return (NULL);
 		}
 		else if (block->avail && block->size >= area_size)

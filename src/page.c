@@ -28,7 +28,7 @@ static size_t	page_ident_size(const size_t area_size)
 		return (PAGE_SMALL_SIZE);
 	else if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
 	{
-		error_malloc(NULL, E_SIZE);
+		error_malloc(NULL, E_SIZE, sizeof(E_SIZE));
 		return (0);
 	}
 	return (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE);
