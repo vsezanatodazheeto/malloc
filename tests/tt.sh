@@ -15,7 +15,8 @@ RESDIR="results"
 
 function func_run() {
 	for i in $@; do
-		DYLD_LIBRARY_PATH=../ ./$SUBDIR/$i &> "$RESDIR/$i.txt"
+		# DYLD_LIBRARY_PATH=../ ./$SUBDIR/$i &> "$RESDIR/$i.txt"
+		LD_LIBRARY_PATH=../ ./$SUBDIR/$i &> "$RESDIR/$i.txt"
 		# ./$SUBDIR/$i &> /dev/null | tee "$RESDIR/$i.txt"
 		# ./$SUBDIR/$i &> "$RESDIR/$i.txt"
 	done

@@ -83,6 +83,8 @@ void		block_reserve(t_block *block, const size_t area_size);
 t_block		*block_place(void *page, const size_t area_size);
 
 void		show_alloc_mem(void);
+void		print_address_hex(int fd, void *p);
+void		print_num(int fd, long n);
 void		error_malloc(void *ptr, char *msg, size_t msg_size);
 void		*ft_memset(void *s, int c, size_t len);
 void		*ft_memcpy(void *dest, const void *source, size_t size);

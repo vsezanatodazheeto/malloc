@@ -1,5 +1,21 @@
 #include "malloc.h"
 
+void	error_malloc(void *ptr, char *msg, size_t msg_size)
+{
+	if (ptr && msg)
+	{
+		write(2, E_ERR, sizeof(E_ERR) - 1);
+		print_address_hex(2, ptr);
+		write(2, msg, msg_size);
+	}
+	else if (!ptr && msg)
+	{
+		write(2, E_ERR, sizeof(E_ERR) - 1);
+		print_address_hex(2, ptr);
+		write(2, msg, msg_size);
+	}
+}
+
 void	*ft_memset(void *s, int c, size_t len)
 {
 	char	*tmp;
@@ -42,39 +58,43 @@ static char	hex_digit(int v)
 		return ('a' + v - 10);
 }
 
-static void	print_address_hex(void *p0)
+void	print_num(int fd, long n)
 {
-	uintptr_t	p;
-	int			i, flag;
+	unsigned long	un;
+	char			c;
+
+	if (fd < 0)
+		return ;
+	if (n < 0)
+	{
+		write(fd, "-", 1);
+		un = -n;
+	}
+	else
+		un = n;
+	if (un > 9)
+		print_num(fd, un / 10);
+	c = un % 10 + '0';
+	write(fd, &c, 1);
+}
+
+void	print_address_hex(int fd, void *p0)
+{
+	uintptr_t	p = (uintptr_t)p0;
+	int			i, flag = 0;
 	char		ch;
 
-	p = (uintptr_t)p0;
-	flag = 0;
-	write(2, "0", 1);
-	write(2, "x", 1);
+	if (fd < 0)
+		return ;
+	write(fd, "0", 1);
+	write(fd, "x", 1);
 	for (i = (sizeof(p) << 3) - 4; i >= 0; i -= 4)
 	{
 		if ('0' < (ch = hex_digit((p >> i) & 0xf)))
 			flag = 1;
 		if (flag)
-			write(2, &ch, 1);
+			write(fd, &ch, 1);
 	}
 	if (!flag)
-		write(2, &ch, 1);
-}
-
-void	error_malloc(void *ptr, char *msg, size_t msg_size)
-{
-	if (ptr && msg)
-	{
-		write(2, E_ERR_AT, sizeof(E_ERR_AT) - 1);
-		print_address_hex(ptr);
-		write(2, msg, msg_size);
-	}
-	else if (!ptr && msg)
-	{
-		write(2, E_ERR, sizeof(E_ERR) - 1);
-		print_address_hex(ptr);
-		write(2, msg, msg_size);
-	}
+		write(fd, &ch, 1);
 }

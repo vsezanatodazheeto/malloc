@@ -24,11 +24,16 @@ D_OBJ = obj/
 OBJ := $(patsubst $(D_SRC)%.c, $(D_OBJ)%.o, $(SRC))
 
 #-------------------------------------------------------------------------------
+LIB_NAME = ft_printf
+LIB_DIR = libft_printf/
+LIB_H = $(LIB_DIR)include/
 
-all: $(NAME)
+#-------------------------------------------------------------------------------
+
+all: subsystem $(NAME)
 
 $(NAME): $(D_OBJ) $(OBJ) Makefile
-	@$(CC) $(CFLAGS) -shared -o $(NAME) $(OBJ)
+	@$(CC) $(CFLAGS) -Wl,--whole-archive libft_printf/libft_printf.a -Wl,--no-whole-archive -l$(LIB_NAME) -L$(LIB_DIR) -I$(LIB_H) -shared -o $(NAME) $(OBJ)
 	@echo "--------------------------------------"
 	@echo "$(NAME) compiled"
 	ln -sf $(NAME) $(NAME_BASE)
@@ -39,12 +44,17 @@ $(D_OBJ):
 
 $(D_OBJ)%.o: $(D_SRC)%.c $(H)
 	@echo $<
-	@$(CC) $(CFLAGS) -fPIC -I$(D_H) -c $< -o $@ -g
+	@$(CC) $(CFLAGS) -g -I$(D_H) -I$(LIB_H) -fPIC -c $< -o $@
+
+subsystem:
+	@$(MAKE) -sC $(LIB_DIR)
 
 clean:
 	@rm -rf $(D_OBJ)
+	@$(MAKE) -sC $(LIB_DIR) clean
 
 fclean: clean
 	@rm -rf $(NAME) $(NAME_BASE)
+	@$(MAKE) -sC $(LIB_DIR) fclean
 
 re: fclean all

@@ -2,9 +2,8 @@
 
 t_block	*block_place(void *area, const size_t area_size)
 {
-	t_block	*block;
+	t_block	*block = (t_block *)area;
 
-	block = (t_block *)area;
 	*block = (t_block){.magic_num = MAGIC_N, .size = area_size, .avail = AVAILABLE};
 	return (block);
 }
