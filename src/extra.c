@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 void	error_malloc(void *ptr, char *msg, size_t msg_size)
 {
@@ -11,7 +11,6 @@ void	error_malloc(void *ptr, char *msg, size_t msg_size)
 	else if (!ptr && msg)
 	{
 		write(2, E_ERR, sizeof(E_ERR) - 1);
-		print_address_hex(2, ptr);
 		write(2, msg, msg_size);
 	}
 }
@@ -86,8 +85,7 @@ void	print_address_hex(int fd, void *p0)
 
 	if (fd < 0)
 		return ;
-	write(fd, "0", 1);
-	write(fd, "x", 1);
+	write(fd, "0x", 2);
 	for (i = (sizeof(p) << 3) - 4; i >= 0; i -= 4)
 	{
 		if ('0' < (ch = hex_digit((p >> i) & 0xf)))

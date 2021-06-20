@@ -10,9 +10,9 @@
 # define MAGIC_N			0x555AAA3C
 
 # define PAGE_TINY_SIZE		(16 * getpagesize())
-# define BLOCK_TINY_LIMIT	1024
-# define PAGE_SMALL_SIZE	(128 * getpagesize())
-# define BLOCK_SMALL_LIMIT	8192
+# define BLOCK_TINY_LIMIT	(size_t)(PAGE_TINY_SIZE / 128)
+# define PAGE_SMALL_SIZE	(32 * getpagesize())
+# define BLOCK_SMALL_LIMIT	(size_t)(PAGE_SMALL_SIZE / 128)
 
 # define STRUCT_PAGE_SIZE	(size_t)(sizeof(t_page))
 # define STRUCT_BLOCK_SIZE	(size_t)(sizeof(t_block))

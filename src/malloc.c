@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 void	*alloc_memory(const size_t page_size)
 {
@@ -68,7 +68,8 @@ void	*malloc(size_t area_size)
 void	*realloc(void *ptr, size_t area_size)
 {
 	t_page	*page;
-	t_block *block, *block_new;
+	t_block *block;
+	void	*block_new;
 
 	if (!ptr)
 		return (malloc(area_size));
@@ -84,7 +85,7 @@ void	*realloc(void *ptr, size_t area_size)
 				{
 					ft_memcpy(block_new, BLOCK_JUMP(block, 0), block->size);
 					free((BLOCK_JUMP(block, 0)));
-					return (BLOCK_JUMP(block_new, 0));
+					return (block_new);
 				}
 			}
 			else

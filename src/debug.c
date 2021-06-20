@@ -1,8 +1,11 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
-#define PR_TINY "TINY:\n"
-#define PR_SMALL "SMALL:\n"
-#define PR_LARGE "LARGE:\n"
+#define DB_TINY "TINY:\n"
+#define DB_SMALL "SMALL:\n"
+#define DB_LARGE "LARGE:\n"
+
+#define DB_PAGE "page: "
+#define DB_BYTE " bytes\n"
 
 static void	dbg_count_blocks_in_page(const t_page *page)
 {
@@ -21,29 +24,33 @@ static void	dbg_count_blocks_in_page(const t_page *page)
 		else
 			write(1, " 0   ", 5);
 		print_num(1, block->size);
-		write(1, "\n", 1);
+		write(1, DB_BYTE, sizeof(DB_BYTE) - 1);
 	}
 }
 
 static void	show_alloc_mem_extra(const t_page *page)
 {
+	size_t	i = 0;
+
 	switch (page->type)
 	{
 	case P_TINY :
-		write(1, PR_TINY, sizeof(PR_TINY) - 1);
+		write(1, DB_TINY, sizeof(DB_TINY) - 1);
 		break;
 	case P_SMALL :
-		write(1, PR_SMALL, sizeof(PR_SMALL) - 1);
+		write(1, DB_SMALL, sizeof(DB_SMALL) - 1);
 		break;
 	case P_LARGE :
-		write(1, PR_LARGE, sizeof(PR_LARGE) - 1);
+		write(1, DB_LARGE, sizeof(DB_LARGE) - 1);
 		break;
 	}
-	for (size_t i = 1; page; ++i, page = page->next)
+	for (; page; i++, page = page->next)
 	{
-		write(1, "page: ", 6);
+		write(1, DB_PAGE, sizeof(DB_PAGE) - 1);
 		print_address_hex(1, (t_v)page);
-		write(1, "\n", 1);
+		write(1, " ", 1);
+		print_num(1, page->size);
+		write(1, DB_BYTE, sizeof(DB_BYTE) - 1);
 		dbg_count_blocks_in_page(page);
 	}
 }

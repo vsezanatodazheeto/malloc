@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 static t_page_type	page_ident_type(const size_t area_size)
 {

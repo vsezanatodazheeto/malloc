@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 static void	dealloc_memory_extra(t_page **head, t_page **last, t_page *page)
 {
