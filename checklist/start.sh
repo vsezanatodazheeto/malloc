@@ -11,7 +11,6 @@ lib_full_name="libft_malloc.so"
 
 cc="gcc"
 flags="-l$lib_name -L$lib_path -I$lib_inc"
-ld="LD_LIBRARY_PATH=$lib_path LD_PRELOAD=.$lib_path/$lib_full_name"
 
 D0="test0"
 D1="test1"
