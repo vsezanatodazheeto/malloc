@@ -28,7 +28,7 @@ static size_t	page_ident_size(const size_t area_size)
 		return (PAGE_SMALL_SIZE);
 	else if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
 	{
-		error_malloc(NULL, E_SIZE, sizeof(E_SIZE) - 1);
+		print_error_malloc(NULL, E_SIZE);
 		return (0);
 	}
 	return (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE);
@@ -73,7 +73,7 @@ t_page	*page_get_available(const size_t area_size)
 		page = main_page->small_head;
 		break;
 	case P_LARGE:
-		page = main_page->large_last;
+		page = main_page->large_head;
 		break;
 	}
 	if (!page)

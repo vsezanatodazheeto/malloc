@@ -10,6 +10,7 @@
 void *p[QT];
 size_t size = SIZE;
 
+
 void print(char *s)
 {
     write(1, s, strlen(s));

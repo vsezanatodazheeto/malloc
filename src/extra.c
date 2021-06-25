@@ -1,17 +1,17 @@
 #include "../include/malloc.h"
 
-void	error_malloc(void *ptr, char *msg, size_t msg_size)
+void	print_error_malloc(void *ptr, char *msg)
 {
 	if (ptr && msg)
 	{
-		write(2, E_ERR, sizeof(E_ERR) - 1);
+		printl(2, E_ERR);
 		print_address_hex(2, ptr);
-		write(2, msg, msg_size);
+		printl(2, msg);
 	}
 	else if (!ptr && msg)
 	{
-		write(2, E_ERR, sizeof(E_ERR) - 1);
-		write(2, msg, msg_size);
+		printl(2, E_ERR);
+		printl(2, msg);
 	}
 }
 
@@ -49,6 +49,21 @@ void	*ft_memcpy(void *dest, const void *source, size_t size)
 	return (dest);
 }
 
+static size_t	ft_strlen(const char *s)
+{
+	size_t i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+void	printl(int fd, char *s)
+{
+    write(fd, s, ft_strlen(s));
+}
+
 static char	hex_digit(int v)
 {
 	if (v >= 0 && v < 10)
@@ -66,7 +81,7 @@ void	print_num(int fd, long n)
 		return ;
 	if (n < 0)
 	{
-		write(fd, "-", 1);
+		printl(fd, "-");
 		un = -n;
 	}
 	else
@@ -81,11 +96,11 @@ void	print_address_hex(int fd, void *p0)
 {
 	uintptr_t	p = (uintptr_t)p0;
 	int			i, flag = 0;
-	char		ch;
+	char		ch = '0';
 
 	if (fd < 0)
 		return ;
-	write(fd, "0x", 2);
+	printl(fd, "0x");
 	for (i = (sizeof(p) << 3) - 4; i >= 0; i -= 4)
 	{
 		if ('0' < (ch = hex_digit((p >> i) & 0xf)))

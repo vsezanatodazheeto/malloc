@@ -6,6 +6,7 @@ int main(void)
     char  *addr;
 
     i = 0;
+    // void *p1 = malloc(1024);
     while (i < 1024) 
     {
         addr = (char*)malloc(1024);
@@ -13,5 +14,6 @@ int main(void)
         free(addr); 
         i++; 
     }
+    // free(p1);
     return (0);
 }

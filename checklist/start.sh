@@ -22,7 +22,8 @@ D6="test6"
 D7="test7"
 D8="test8"
 D9="test9"
-D=($D0 $D1 $D2 $D3 $D4 $D5 $D6 $D7 $D8 $D9)
+D10="test10"
+D=($D0 $D1 $D2 $D3 $D4 $D5 $D6 $D7 $D8 $D9 $D10)
 
 function func_compile_run() {
 	for i in $@; do

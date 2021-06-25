@@ -68,24 +68,25 @@ void		*calloc(size_t nmemb, size_t memb_size);
 void		*realloc(void *ptr, size_t area_size);
 void		free(void *ptr);
 
-void		*alloc_memory(const size_t page_size);
+void		*alloc_memory(size_t page_size);
 
 t_page		*page_validation(void *ptr);
 t_block		*block_validation(t_page *page, void *ptr);
 
 t_main_page	*main_page_get(void);
 void		main_page_update(t_page *page);
-t_page		*page_get_available(const size_t area_size);
-t_page		*page_create(const size_t block_size);
+t_page		*page_get_available(size_t area_size);
+t_page		*page_create(size_t block_size);
 
-t_block		*block_get_available(t_page *page, const size_t area_size);
-void		block_reserve(t_block *block, const size_t area_size);
-t_block		*block_place(void *page, const size_t area_size);
+t_block		*block_get_available(t_page *page, size_t area_size);
+void		block_reserve(t_block *block, size_t area_size, t_page_type page_type);
+t_block		*block_place(void *page, size_t area_size);
 
 void		show_alloc_mem(void);
+void		printl(int fd, char *s);
 void		print_address_hex(int fd, void *p);
 void		print_num(int fd, long n);
-void		error_malloc(void *ptr, char *msg, size_t msg_size);
+void		print_error_malloc(void *ptr, char *msg);
 void		*ft_memset(void *s, int c, size_t len);
 void		*ft_memcpy(void *dest, const void *source, size_t size);
 

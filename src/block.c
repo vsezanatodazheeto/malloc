@@ -8,13 +8,21 @@ t_block	*block_place(void *area, const size_t area_size)
 	return (block);
 }
 
-// if block added, need to update page->block_last, returns 1
-
-static void	block_check_rest_size(t_block *block, const size_t area_size, const size_t rest_size)
+static void	block_check_rest_size(t_block *block, size_t area_size, size_t rest_size, t_page_type page_type)
 {
 	t_block	*block_possible;
+	size_t	type_size;
 
-	if (rest_size > STRUCT_BLOCK_SIZE)
+	switch (page_type)
+	{
+	case P_LARGE:
+		type_size = STRUCT_BLOCK_SIZE + BLOCK_SMALL_LIMIT;
+		break;
+	default:
+		type_size = STRUCT_BLOCK_SIZE;
+		break;
+	}
+	if (rest_size > type_size)
 	{
 		block_possible = block_place(BLOCK_JUMP(block, area_size), rest_size - STRUCT_BLOCK_SIZE);
 		block_possible->prev = block;
@@ -25,24 +33,19 @@ static void	block_check_rest_size(t_block *block, const size_t area_size, const 
 		block->size = block->size + rest_size;
 }
 
-// if (block->next)
-	// rest_size = (t_ch)block->next - BLOCK_JUMP(block, area_size);
-// else
-	// rest_size = PAGE_LAST_ADDR(page) - BLOCK_JUMP(block, area_size);
-
 // block_reserve:
 // if a avaiable matching block >= of the right size is found, we get here
 // check if a new potential avaiable block can be placed behind the block
 // (there may be the end of the page or another block)
 
-void	block_reserve(t_block *block, const size_t area_size)
+void	block_reserve(t_block *block, size_t area_size, t_page_type page_type)
 {
 	size_t	rest_size;
 
 	rest_size = BLOCK_JUMP(block, block->size) - BLOCK_JUMP(block, area_size);
 	block->avail = UNAVAILABLE;
 	block->size = area_size;
-	block_check_rest_size(block, area_size, rest_size);
+	block_check_rest_size(block, area_size, rest_size, page_type);
 }
 
 // block_get_available:
@@ -59,12 +62,12 @@ t_block	*block_get_available(t_page *page, const size_t area_size)
 	{
 		if (block->magic_num != MAGIC_N)
 		{
-			error_malloc(block, E_DATA, sizeof(E_DATA) - 1);
+			print_error_malloc(block, E_DATA);
 			return (NULL);
 		}
 		else if (block->avail && block->size >= area_size)
 		{
-			block_reserve(block, area_size);
+			block_reserve(block, area_size, page->type);
 			page->block_unvail_qt++;
 			return (block);
 		}

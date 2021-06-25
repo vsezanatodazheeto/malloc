@@ -30,7 +30,7 @@ void	*calloc(size_t nmemb, size_t memb_size)
 	{
 		size = nmemb * memb_size;
 		if (size / memb_size != nmemb)
-			error_malloc(NULL, E_SIZE, sizeof(E_SIZE) - 1);
+			print_error_malloc(NULL, E_SIZE);
 		else if ((area = malloc(size)))
 			ft_memset(area, 0, size);
 	}
@@ -48,7 +48,7 @@ void	*malloc(size_t area_size)
 	t_block	*block;
 
 	if (area_size + STRUCT_PAGE_SIZE + STRUCT_BLOCK_SIZE < area_size)
-		error_malloc(NULL, E_SIZE, sizeof(E_SIZE) - 1);
+		print_error_malloc(NULL, E_SIZE);
 	else
 	{
 		if ((page = page_get_available(area_size)))
@@ -90,7 +90,7 @@ void	*realloc(void *ptr, size_t area_size)
 			}
 			else
 			{
-				block_reserve(block, area_size);
+				block_reserve(block, area_size, page->type);
 				return (ptr);
 			}
 		}

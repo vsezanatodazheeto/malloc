@@ -74,7 +74,7 @@ t_block	*block_validation(t_page *page, void *ptr)
 	{
 		if (block->magic_num != MAGIC_N)
 		{
-			error_malloc(block, E_DATA, sizeof(E_DATA) - 1);
+			print_error_malloc(block, E_DATA);
 			return (NULL);
 		}
 		if (block == BLOCK_META(ptr))
@@ -82,7 +82,7 @@ t_block	*block_validation(t_page *page, void *ptr)
 	}
 	if (!block || block->avail)
 	{
-		error_malloc(ptr, E_PTR, sizeof(E_PTR) - 1);
+		print_error_malloc(ptr, E_PTR);
 		return (NULL);
 	}
 	return (block);
@@ -109,7 +109,7 @@ t_page	*page_validation(void *ptr)
 		if (!(page = page_find(main_page->small_head, ptr)))
 		{
 			if (!(page = page_find(main_page->large_head, ptr)))
-				error_malloc(ptr, E_PTR, sizeof(E_PTR) - 1);
+				print_error_malloc(ptr, E_PTR);
 		}
 	}
 	return (page);
@@ -119,7 +119,11 @@ t_page	*page_validation(void *ptr)
 // check if ptr exists on pages
 // check if ptr is a part of real block with meta data
 // sets ptr to available
-// 'defragmentation'
+// 'defragmentation':
+// if no more unavailable block on the page call munmap()
+// but if there is only one page left, do not call munmap()
+// otherwise, we check if we can combine adjacent available blocks
+// into one free area, which will be a new available block 
 
 void	free(void *ptr)
 {
@@ -134,7 +138,7 @@ void	free(void *ptr)
 			{
 				block->avail = AVAILABLE;
 				page->block_unvail_qt--;
-				if (page->block_unvail_qt < 1)
+				if (page->block_unvail_qt < 1 && (page->next || page->prev))
 					dealloc_memory(page);
 				else
 					free_defragmentation(block);
