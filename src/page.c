@@ -1,6 +1,6 @@
 #include "../include/malloc.h"
 
-static t_page_type	page_ident_type(const size_t area_size)
+static t_page_type	page_ident_type(size_t area_size)
 {
 	if (area_size <= BLOCK_TINY_LIMIT)
 		return (P_TINY);
@@ -9,7 +9,7 @@ static t_page_type	page_ident_type(const size_t area_size)
 	return (P_LARGE);
 }
 
-static void	page_init(t_page *page, const size_t page_size, const size_t block_size)
+static void	page_init(t_page *page, size_t page_size, size_t block_size)
 {
 	ft_memset(page, 0, STRUCT_PAGE_SIZE);
 	page->type = page_ident_type(block_size);
@@ -20,7 +20,7 @@ static void	page_init(t_page *page, const size_t page_size, const size_t block_s
 // page_ident_size:
 // returns the page size depending on the amount of memory requested
 
-static size_t	page_ident_size(const size_t area_size)
+static size_t	page_ident_size(size_t area_size)
 {
 	if (area_size <= BLOCK_TINY_LIMIT)
 		return (PAGE_TINY_SIZE);
@@ -40,7 +40,7 @@ static size_t	page_ident_size(const size_t area_size)
 // initialize the page with initial parameters
 // update the current pointer in main_page to the 'fresh' pointer
 
-t_page	*page_create(const size_t block_size)
+t_page	*page_create(size_t block_size)
 {
 	t_page	*page;
 	size_t	page_size;
@@ -58,7 +58,7 @@ t_page	*page_create(const size_t block_size)
 // returns the current page depending on the size of the requested memory
 // if the page is not found, then create
 
-t_page	*page_get_available(const size_t area_size)
+t_page	*page_get_available(size_t area_size)
 {
 	t_main_page	*main_page;
 	t_page		*page;
