@@ -138,7 +138,7 @@ void	free(void *ptr)
 			{
 				block->avail = AVAILABLE;
 				page->block_unvail_qt--;
-				if (page->block_unvail_qt < 1 && (page->next || page->prev))
+				if (page->block_unvail_qt < 1 && page->prev)
 					dealloc_memory(page);
 				else
 					free_defragmentation(block);

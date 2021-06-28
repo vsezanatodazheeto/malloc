@@ -18,7 +18,10 @@ static void	block_check_rest_size(t_block *block, size_t area_size, size_t rest_
 	case P_LARGE:
 		type_size = STRUCT_BLOCK_SIZE + BLOCK_SMALL_LIMIT;
 		break;
-	default:
+	case P_SMALL:
+		type_size = STRUCT_BLOCK_SIZE + BLOCK_TINY_LIMIT;
+		break;
+	case P_TINY:
 		type_size = STRUCT_BLOCK_SIZE;
 		break;
 	}
